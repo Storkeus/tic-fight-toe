@@ -8,8 +8,8 @@ export default class BoardScene extends Phaser.Scene {
 
     readonly numberOfColumns: number = 3;
     readonly numberOfRows: number = 3;
-    readonly boardStartX: number = 285;
-    readonly boardStartY: number = 150;
+    readonly boardStartX: number = 100;
+    readonly boardStartY: number = 100;
     readonly tileOverlap: number = 5;
     readonly tileSize: number = 150;
 
@@ -20,6 +20,8 @@ export default class BoardScene extends Phaser.Scene {
 
     tiles: Array<Array<Tile>> = [];
 
+    isFighterAction: boolean = false;
+
 
     constructor() {
         super('Board');
@@ -28,13 +30,14 @@ export default class BoardScene extends Phaser.Scene {
     preload() {
         this.load.image('background', 'images/background.png');
         this.load.image(Tile.textureName, Tile.texturePath);
+        this.load.image(Tile.textureNameActive, Tile.texturePathActive);
 
-        this.load.spritesheet('knight-player-1', 'images/red/knight/Combat Ready Idle.png', {
+        this.load.spritesheet(Knight.textureNamePlayer_1, Knight.texturePathPlayer_1, {
             frameWidth: 99,
             frameHeight: 108
         });
 
-        this.load.spritesheet('knight-player-2', 'images/green/knight/Combat Ready Idle.png', {
+        this.load.spritesheet(Knight.textureNamePlayer_2, Knight.texturePathPlayer_2, {
             frameWidth: 99,
             frameHeight: 108
         });
@@ -42,14 +45,14 @@ export default class BoardScene extends Phaser.Scene {
 
     create() {
         this.anims.create({
-            key: 'knight-player-1-idle',
-            frames: this.anims.generateFrameNumbers('knight-player-1', { start: 0, end: 4 }),
+            key: `${Knight.textureNamePlayer_1}-idle`,
+            frames: this.anims.generateFrameNumbers(Knight.textureNamePlayer_1, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
         this.anims.create({
-            key: 'knight-player-2-idle',
-            frames: this.anims.generateFrameNumbers('knight-player-2', { start: 0, end: 4 }),
+            key: `${Knight.textureNamePlayer_2}-idle`,
+            frames: this.anims.generateFrameNumbers(Knight.textureNamePlayer_2, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
@@ -70,7 +73,9 @@ export default class BoardScene extends Phaser.Scene {
                 this.tiles[offsetX][offsetY] = new Tile(
                     this.boardStartX + offsetX * (this.tileSize - this.tileOverlap),
                     this.boardStartY + offsetY * (this.tileSize - this.tileOverlap),
-                    this
+                    this,
+                    offsetX,
+                    offsetY
                 );
 
             }
@@ -78,18 +83,24 @@ export default class BoardScene extends Phaser.Scene {
     }
 
     refreshActivePlayerText() {
-        const text = `Gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}`;
+        const text = `Player: ${this.activePlayer === Players.Player_1 ? '1' : '2'}`;
 
         if (!this.activePlayerText) {
-            this.activePlayerText = this.add.text(400, 30, text);
+            this.activePlayerText = this.add.text(600, 30, text);
         } else {
             this.activePlayerText.setText(text);
         }
     }
 
     nextPlayer() {
-
         if (this.isWin()) {
+            if (this.activePlayer === Players.Player_1) {
+                alert('Player 1 wins');
+            }
+
+            if (this.activePlayer === Players.Player_2) {
+                alert('Player 2 wins');
+            }
 
         } else {
             if (this.activePlayer === Players.Player_1) {
@@ -101,9 +112,18 @@ export default class BoardScene extends Phaser.Scene {
             this.selectedFighter = new Knight(this.activePlayer, this, -100, -100);
 
             this.refreshActivePlayerText();
+            this.markAllTilesUnactive();
+            this.isFighterAction = false;
         }
+    }
 
-
+    markAllTilesUnactive() {
+        for (let x = 0; x < this.tiles.length; x++) {
+            for (let y = 0; y < this.tiles[0].length; y++) {
+                const tile = this.tiles[x][y];
+                tile.markUnactive();
+            }
+        }
     }
 
     isWin() {
@@ -120,12 +140,10 @@ export default class BoardScene extends Phaser.Scene {
                 }
             }
             if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-                console.log('Player 1 wins!');
                 return true;
             }
 
             if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-                console.log('Player 2 wins!');
                 return true;
             }
         }
@@ -142,12 +160,10 @@ export default class BoardScene extends Phaser.Scene {
                 }
             }
             if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-                console.log('Player 1 wins!');
                 return true;
             }
 
             if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-                console.log('Player 2 wins!');
                 return true;
             }
         }
@@ -158,7 +174,6 @@ export default class BoardScene extends Phaser.Scene {
         for (let x = this.tiles.length - 1; x >= 0; x--) {
             const y = this.tiles[0].length - 1 - x;
                 const tile = this.tiles[x][y];
-                console.log(x,y);
                 if (tile.belongsToPlayer(Players.Player_1)) {
                     activeFirstPlayersTilesInLine++;
                 } else if (tile.belongsToPlayer(Players.Player_2)) {
@@ -167,12 +182,10 @@ export default class BoardScene extends Phaser.Scene {
         }
 
         if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-            console.log('Player 1 wins!');
             return true;
         }
 
         if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-            console.log('Player 2 wins!');
             return true;
         }
 
@@ -191,12 +204,10 @@ export default class BoardScene extends Phaser.Scene {
         }
 
         if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-            console.log('Player 1 wins!');
             return true;
         }
 
         if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-            console.log('Player 2 wins!');
             return true;
         }
 

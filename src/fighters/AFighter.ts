@@ -17,6 +17,8 @@ export default abstract class AFighter implements IFighter {
         this.gameObject.anims.play(`${texture}-idle`, true);
     }
 
+    abstract findTargets(grid: Tile[][], startX: number, startY: number): number;
+
     setPosition(x: number, y: number): void {
        this.gameObject.setPosition(x, y);
     }
@@ -26,5 +28,7 @@ export default abstract class AFighter implements IFighter {
     public getPlayer(): Players {
         return this.player;
     }
-    
+    remove():void {
+        this.gameObject.destroy();
+    };
 }
