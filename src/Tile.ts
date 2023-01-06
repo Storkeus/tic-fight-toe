@@ -1,5 +1,6 @@
 import IFighter from "./fighters/IFighter";
 import Knight from "./fighters/Knight";
+import WinConditionChecker from "./helpers/WinConditionChecker";
 import { Players } from "./Players";
 import BoardScene from "./scenes/BoardScene";
 
@@ -14,8 +15,8 @@ export default class Tile
     private scene: BoardScene;
     private fighter?: IFighter;
 
-    private positionXInGrid: number;
-    private positionYInGrid: number;
+    public positionXInGrid: number;
+    public positionYInGrid: number;
 
     private isActive: boolean = false;
 
@@ -26,7 +27,6 @@ export default class Tile
         .on('pointerdown', () => {
             if (this.scene.isFighterAction) {
                 if (this.isActive && this.fighter) {
-                    console.log('removing');
                     this.fighter.remove();
                     this.fighter = undefined;
                     this.scene.nextPlayer();
@@ -34,6 +34,12 @@ export default class Tile
             } else {
                 if (!this.fighter) {
                     this.putFighter(this.scene.selectedFighter);
+
+                    const winConditionChecker = new WinConditionChecker();
+                    if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
+                        this.scene.endGame();
+                    }
+
                     const targets: number = this.fighter.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
                     if (targets === 0) {
                         this.scene.nextPlayer();
@@ -55,6 +61,7 @@ export default class Tile
     }
 
     belongsToPlayer(player: Players): boolean {
+        console.log(!!this.fighter && this.fighter.getPlayer() === player)
         return !!this.fighter && this.fighter.getPlayer() === player;
     }
 

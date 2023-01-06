@@ -16,7 +16,7 @@ export default class BoardScene extends Phaser.Scene {
     activePlayerText?: Phaser.GameObjects.Text;
     activePlayer: Players = Players.Player_1;
 
-    selectedFighter: IFighter;
+    selectedFighter!: IFighter;
 
     tiles: Array<Array<Tile>> = [];
 
@@ -93,28 +93,17 @@ export default class BoardScene extends Phaser.Scene {
     }
 
     nextPlayer() {
-        if (this.isWin()) {
-            if (this.activePlayer === Players.Player_1) {
-                alert('Player 1 wins');
-            }
-
-            if (this.activePlayer === Players.Player_2) {
-                alert('Player 2 wins');
-            }
-
+        if (this.activePlayer === Players.Player_1) {
+            this.activePlayer = Players.Player_2;
         } else {
-            if (this.activePlayer === Players.Player_1) {
-                this.activePlayer = Players.Player_2;
-            } else {
-                this.activePlayer = Players.Player_1;
-            }
-
-            this.selectedFighter = new Knight(this.activePlayer, this, -100, -100);
-
-            this.refreshActivePlayerText();
-            this.markAllTilesUnactive();
-            this.isFighterAction = false;
+            this.activePlayer = Players.Player_1;
         }
+
+        this.selectedFighter = new Knight(this.activePlayer, this, -100, -100);
+
+        this.refreshActivePlayerText();
+        this.markAllTilesUnactive();
+        this.isFighterAction = false;
     }
 
     markAllTilesUnactive() {
@@ -126,91 +115,7 @@ export default class BoardScene extends Phaser.Scene {
         }
     }
 
-    isWin() {
-        //TODO: OMG refactor that monster
-        for (let x = 0; x < this.tiles.length; x++) {
-            let activeFirstPlayersTilesInLine = 0;
-            let activeSecondPlayersTilesInLine = 0;
-            for (let y = 0; y < this.tiles[0].length; y++) {
-                const tile = this.tiles[x][y];
-                if (tile.belongsToPlayer(Players.Player_1)) {
-                    activeFirstPlayersTilesInLine++;
-                } else if (tile.belongsToPlayer(Players.Player_2)) {
-                    activeSecondPlayersTilesInLine++;
-                }
-            }
-            if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-                return true;
-            }
-
-            if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-                return true;
-            }
-        }
-
-        for (let y = 0; y < this.tiles[0].length; y++) {
-            let activeFirstPlayersTilesInLine = 0;
-            let activeSecondPlayersTilesInLine = 0;
-            for (let x = 0; x < this.tiles.length; x++) {
-                const tile = this.tiles[x][y];
-                if (tile.belongsToPlayer(Players.Player_1)) {
-                    activeFirstPlayersTilesInLine++;
-                } else if (tile.belongsToPlayer(Players.Player_2)) {
-                    activeSecondPlayersTilesInLine++;
-                }
-            }
-            if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-                return true;
-            }
-
-            if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-                return true;
-            }
-        }
-
-        //Need fix if a board is not square
-        let activeFirstPlayersTilesInLine = 0;
-        let activeSecondPlayersTilesInLine = 0;
-        for (let x = this.tiles.length - 1; x >= 0; x--) {
-            const y = this.tiles[0].length - 1 - x;
-                const tile = this.tiles[x][y];
-                if (tile.belongsToPlayer(Players.Player_1)) {
-                    activeFirstPlayersTilesInLine++;
-                } else if (tile.belongsToPlayer(Players.Player_2)) {
-                    activeSecondPlayersTilesInLine++;
-                }
-        }
-
-        if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-            return true;
-        }
-
-        if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-            return true;
-        }
-
-        //Need fix if a board is not square
-        activeFirstPlayersTilesInLine = 0;
-        activeSecondPlayersTilesInLine = 0;
-        for (let x = 0; x < this.tiles.length; x++) {
-
-
-            const tile = this.tiles[x][x];
-            if (tile.belongsToPlayer(Players.Player_1)) {
-                activeFirstPlayersTilesInLine++;
-            } else if (tile.belongsToPlayer(Players.Player_2)) {
-                activeSecondPlayersTilesInLine++;
-            }
-        }
-
-        if (activeFirstPlayersTilesInLine === this.numberOfColumns) {
-            return true;
-        }
-
-        if (activeSecondPlayersTilesInLine === this.numberOfColumns) {
-            return true;
-        }
-
-        return false;
+    endGame() {
+        console.log(`Wygrywa gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}!`);
     }
 }
