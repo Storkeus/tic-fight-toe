@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import IFighter from '~/fighters/IFighter';
 import Knight from '~/fighters/Knight';
+import Archer from '~/fighters/Archer';
 import { Players } from '~/Players';
 import Tile from '~/Tile';
 
@@ -22,6 +23,8 @@ export default class BoardScene extends Phaser.Scene {
 
     isFighterAction: boolean = false;
 
+    currentTurnFighter: string = 'knight';
+
 
     constructor() {
         super('Board');
@@ -41,6 +44,16 @@ export default class BoardScene extends Phaser.Scene {
             frameWidth: 99,
             frameHeight: 108
         });
+
+        this.load.spritesheet(Archer.textureNamePlayer_1, Archer.texturePathPlayer_1, {
+            frameWidth: 99,
+            frameHeight: 108
+        });
+
+        this.load.spritesheet(Archer.textureNamePlayer_2, Archer.texturePathPlayer_2, {
+            frameWidth: 99,
+            frameHeight: 108
+        });
     }
 
     create() {
@@ -57,13 +70,24 @@ export default class BoardScene extends Phaser.Scene {
             repeat: -1
         });
 
-
+        this.anims.create({
+            key: `${Archer.textureNamePlayer_1}-idle`,
+            frames: this.anims.generateFrameNumbers(Archer.textureNamePlayer_1, { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
+        this.anims.create({
+            key: `${Archer.textureNamePlayer_2}-idle`,
+            frames: this.anims.generateFrameNumbers(Archer.textureNamePlayer_2, { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
 
         this.add.image(400, 300, 'background');
         this.createBoard();
         this.refreshActivePlayerText();
 
-        this.selectedFighter = new Knight(this.activePlayer, this, -100, -100);
+        this.selectedFighter = this.getCurrentFighter();
     }
 
     createBoard() {
@@ -93,17 +117,33 @@ export default class BoardScene extends Phaser.Scene {
     }
 
     nextPlayer() {
+        let shouldFighterChange = false;
         if (this.activePlayer === Players.Player_1) {
             this.activePlayer = Players.Player_2;
+            shouldFighterChange = true;
         } else {
             this.activePlayer = Players.Player_1;
         }
 
-        this.selectedFighter = new Knight(this.activePlayer, this, -100, -100);
+        this.selectedFighter = this.getCurrentFighter();
 
         this.refreshActivePlayerText();
         this.markAllTilesUnactive();
         this.isFighterAction = false;
+
+        console.log(shouldFighterChange);
+        if (shouldFighterChange) {
+            switch (this.currentTurnFighter) {
+                case 'knight':
+                    this.currentTurnFighter = 'archer';
+                    break;
+                case 'archer':
+                    this.currentTurnFighter = 'knight';
+                    break;
+                default:
+                    this.currentTurnFighter = 'knight';
+            }
+        }
     }
 
     markAllTilesUnactive() {
@@ -116,6 +156,20 @@ export default class BoardScene extends Phaser.Scene {
     }
 
     endGame() {
+        alert(`Wygrywa gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}!`);
+        // pokazuję tylko Miłoszowi - do zmiany.
+        this.preload();
         console.log(`Wygrywa gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}!`);
+    }
+
+    getCurrentFighter(): IFighter {
+        switch (this.currentTurnFighter) {
+            case 'knight':
+                return new Knight(this.activePlayer, this, -100, -100);
+            case 'archer':
+                return new Archer(this.activePlayer, this, -100, -100);
+            default:
+                return new Knight(this.activePlayer, this, -100, -100);
+        }
     }
 }
