@@ -24,6 +24,7 @@ export default class BoardScene extends Phaser.Scene {
     isFighterAction: boolean = false;
 
     currentTurnFighter: string = 'knight';
+    orderOfFighters: Array<string> = ['knight', 'archer'];
 
 
     constructor() {
@@ -133,15 +134,15 @@ export default class BoardScene extends Phaser.Scene {
 
         console.log(shouldFighterChange);
         if (shouldFighterChange) {
-            switch (this.currentTurnFighter) {
-                case 'knight':
-                    this.currentTurnFighter = 'archer';
-                    break;
-                case 'archer':
-                    this.currentTurnFighter = 'knight';
-                    break;
-                default:
-                    this.currentTurnFighter = 'knight';
+            const currentTurnFighterIndex = this.orderOfFighters.findIndex((fighter) => fighter === this.currentTurnFighter);
+            if (currentTurnFighterIndex >= 0) {
+                if (currentTurnFighterIndex === this.orderOfFighters.length -1) {
+                    this.currentTurnFighter = this.orderOfFighters[0];
+                } else {
+                    this.currentTurnFighter = this.orderOfFighters[currentTurnFighterIndex + 1];
+                }
+            } else {
+                this.currentTurnFighter = 'knight';
             }
         }
     }
