@@ -32,19 +32,28 @@ export default class Tile
                     this.scene.nextPlayer();
                 }
             } else {
-                if (this.fighter !== undefined) {
+                let firstClickInTurn: boolean = false;
+                if (!this.fighter) {
                     this.putFighter(this.scene.selectedFighter);
+                    firstClickInTurn = true;
+                }
 
-                    const winConditionChecker = new WinConditionChecker();
-                    if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
-                        this.scene.endGame();
+                if (firstClickInTurn) {
+                    if (this.fighter !== undefined) {
+                        const winConditionChecker = new WinConditionChecker();
+                        if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
+                            this.scene.endGame();
+                        }
+    
+                        const targets: number = this.fighter.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
+                        if (targets === 0) {
+                            this.scene.nextPlayer();
+                        } else {
+                            this.scene.isFighterAction = true;
+                        }
                     }
-
-                    const targets: number = this.fighter.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
-                    if (targets === 0) {
-                        this.scene.nextPlayer();
-                    } else {
-                        this.scene.isFighterAction = true;
+                    else {
+                        throw new Error('Fighter should be defined at this after at first click in turn!');
                     }
                 }
             }
