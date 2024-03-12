@@ -32,7 +32,7 @@ export default class Tile
                     this.scene.nextPlayer();
                 }
             } else {
-                if (!this.fighter) {
+                if (this.fighter !== undefined) {
                     this.putFighter(this.scene.selectedFighter);
 
                     const winConditionChecker = new WinConditionChecker();
