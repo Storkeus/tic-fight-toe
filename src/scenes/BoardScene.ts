@@ -4,8 +4,11 @@ import Knight from '~/fighters/Knight';
 import Archer from '~/fighters/Archer';
 import { Players } from '~/Players';
 import Tile from '~/Tile';
+import AScene from './AScene';
 
-export default class BoardScene extends Phaser.Scene {
+export default class BoardScene extends AScene {
+
+    static readonly key: string = 'Board';
 
     readonly numberOfColumns: number = 3;
     readonly numberOfRows: number = 3;
@@ -28,7 +31,7 @@ export default class BoardScene extends Phaser.Scene {
 
 
     constructor() {
-        super('Board');
+        super(BoardScene.key);
     }
 
     preload() {

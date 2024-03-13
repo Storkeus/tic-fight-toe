@@ -1,9 +1,12 @@
-import Phaser from 'phaser'
+import AScene from './AScene';
+import BoardScene from './BoardScene';
 
-export default class MenuScene extends Phaser.Scene {
+export default class MenuScene extends AScene {
     
+    static readonly key: string = 'Menu';
+
     constructor() {
-        super('Menu');
+        super(MenuScene.key);
     }
 
     preload() {
@@ -20,9 +23,9 @@ export default class MenuScene extends Phaser.Scene {
         helloButton.setInteractive();
 
         helloButton.on('pointerdown', () => {
-            this.scene.stop('Menu');
-            this.scene.start('Board');
-            this.scene.bringToTop('Board');
+            this.scene.stop(MenuScene.key);
+            this.scene.start(BoardScene.key);
+            this.scene.bringToTop(BoardScene.key);
         });
     }
 }
