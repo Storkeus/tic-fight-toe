@@ -5,6 +5,7 @@ import Archer from '~/fighters/Archer';
 import { Players } from '~/Players';
 import Tile from '~/Tile';
 import AScene from './AScene';
+import GameOverScene from './GameOverScene';
 
 export default class BoardScene extends AScene {
 
@@ -135,7 +136,6 @@ export default class BoardScene extends AScene {
         this.markAllTilesUnactive();
         this.isFighterAction = false;
 
-        console.log(shouldFighterChange);
         if (shouldFighterChange) {
             const currentTurnFighterIndex = this.orderOfFighters.findIndex((fighter) => fighter === this.currentTurnFighter);
             if (currentTurnFighterIndex >= 0) {
@@ -160,10 +160,7 @@ export default class BoardScene extends AScene {
     }
 
     endGame() {
-        alert(`Wygrywa gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}!`);
-        // pokazuję tylko Miłoszowi - do zmiany.
-        this.preload();
-        console.log(`Wygrywa gracz: ${this.activePlayer === Players.Player_1 ? '1' : '2'}!`);
+        this.scene.start(GameOverScene.key, {winner: this.activePlayer === Players.Player_1 ? '1' : '2'});
     }
 
     getCurrentFighter(): IFighter {

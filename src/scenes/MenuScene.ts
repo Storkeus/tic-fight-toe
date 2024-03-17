@@ -10,11 +10,11 @@ export default class MenuScene extends AScene {
     }
 
     preload() {
-        this.load.image('background', 'images/background-menu.png');
+        this.load.image('background-menu', 'images/background-menu.png');
     }
 
     create() {
-        this.add.image(400, 300, 'background');
+        this.add.image(400, 300, 'background-menu');
 
         const helloButton = this.add.text(400, 300, 'Start', {fontSize: 50});
         helloButton.setX(helloButton.x - (helloButton.displayWidth / 2));
@@ -23,9 +23,11 @@ export default class MenuScene extends AScene {
         helloButton.setInteractive();
 
         helloButton.on('pointerdown', () => {
-            this.scene.stop(MenuScene.key);
-            this.scene.start(BoardScene.key);
-            this.scene.bringToTop(BoardScene.key);
+            this.scene.add(BoardScene.key, BoardScene, true);
         });
+
+        const copyrightText = this.add.text(400, 600, '© 2024 StorkyCode', {fontSize: 15});
+        copyrightText.setX(copyrightText.x - (copyrightText.displayWidth / 2));
+        copyrightText.setY(copyrightText.y - copyrightText.displayHeight);
     }
 }

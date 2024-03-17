@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
-import BoardScene from './scenes/BoardScene'
 import MenuScene from './scenes/MenuScene'
+import GameOverScene from './scenes/GameOverScene'
 
 const config: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
@@ -13,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
 			gravity: { y: 200 }
 		}
 	},
-	scene: [MenuScene, BoardScene]
+	scene: [MenuScene, GameOverScene]
 }
 
 export default new Phaser.Game(config)
