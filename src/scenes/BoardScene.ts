@@ -22,6 +22,8 @@ export default class BoardScene extends AScene {
     activePlayer: Players = Players.Player_1;
 
     selectedFighter!: IFighter;
+    selectedFighterDescription?: Phaser.GameObjects.Text;
+    selectedFighterImage?: Phaser.GameObjects.Image;
 
     tiles: Array<Array<Tile>> = [];
 
@@ -40,22 +42,22 @@ export default class BoardScene extends AScene {
         this.load.image(Tile.textureName, Tile.texturePath);
         this.load.image(Tile.textureNameActive, Tile.texturePathActive);
 
-        this.load.spritesheet(Knight.textureNamePlayer_1, Knight.texturePathPlayer_1, {
+        this.load.spritesheet(Knight.TEXTURE_NAME_PLAYER_1, Knight.TEXTURE_PATH_PLAYER_1, {
             frameWidth: 99,
             frameHeight: 108
         });
 
-        this.load.spritesheet(Knight.textureNamePlayer_2, Knight.texturePathPlayer_2, {
+        this.load.spritesheet(Knight.TEXTURE_NAME_PLAYER_2, Knight.TEXTURE_PATH_PLAYER_2, {
             frameWidth: 99,
             frameHeight: 108
         });
 
-        this.load.spritesheet(Archer.textureNamePlayer_1, Archer.texturePathPlayer_1, {
+        this.load.spritesheet(Archer.TEXTURE_NAME_PLAYER_1, Archer.TEXTURE_PATH_PLAYER_1, {
             frameWidth: 99,
             frameHeight: 108
         });
 
-        this.load.spritesheet(Archer.textureNamePlayer_2, Archer.texturePathPlayer_2, {
+        this.load.spritesheet(Archer.TEXTURE_NAME_PLAYER_2, Archer.TEXTURE_PATH_PLAYER_2, {
             frameWidth: 99,
             frameHeight: 108
         });
@@ -63,27 +65,27 @@ export default class BoardScene extends AScene {
 
     create() {
         this.anims.create({
-            key: `${Knight.textureNamePlayer_1}-idle`,
-            frames: this.anims.generateFrameNumbers(Knight.textureNamePlayer_1, { start: 0, end: 4 }),
+            key: `${Knight.TEXTURE_NAME_PLAYER_1}-idle`,
+            frames: this.anims.generateFrameNumbers(Knight.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
         this.anims.create({
-            key: `${Knight.textureNamePlayer_2}-idle`,
-            frames: this.anims.generateFrameNumbers(Knight.textureNamePlayer_2, { start: 0, end: 4 }),
+            key: `${Knight.TEXTURE_NAME_PLAYER_2}-idle`,
+            frames: this.anims.generateFrameNumbers(Knight.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
 
         this.anims.create({
-            key: `${Archer.textureNamePlayer_1}-idle`,
-            frames: this.anims.generateFrameNumbers(Archer.textureNamePlayer_1, { start: 0, end: 4 }),
+            key: `${Archer.TEXTURE_NAME_PLAYER_1}-idle`,
+            frames: this.anims.generateFrameNumbers(Archer.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
         this.anims.create({
-            key: `${Archer.textureNamePlayer_2}-idle`,
-            frames: this.anims.generateFrameNumbers(Archer.textureNamePlayer_2, { start: 0, end: 4 }),
+            key: `${Archer.TEXTURE_NAME_PLAYER_2}-idle`,
+            frames: this.anims.generateFrameNumbers(Archer.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
         });
@@ -164,13 +166,48 @@ export default class BoardScene extends AScene {
     }
 
     getCurrentFighter(): IFighter {
+        let fighter: IFighter;
         switch (this.currentTurnFighter) {
             case 'knight':
-                return new Knight(this.activePlayer, this, -100, -100);
+                {
+                    fighter = new Knight(this.activePlayer, this, -100, -100);
+                    break;
+                }
             case 'archer':
-                return new Archer(this.activePlayer, this, -100, -100);
+                {
+                    fighter = new Archer(this.activePlayer, this, -100, -100);
+                    break;
+                }
             default:
-                return new Knight(this.activePlayer, this, -100, -100);
+                {
+                    fighter = new Knight(this.activePlayer, this, -100, -100);
+                    break;
+                }
+        }
+
+        this.setFighterDescription(fighter);
+
+        return fighter;
+    }
+
+    setFighterDescription(fighter: IFighter) {
+        if (!this.selectedFighterDescription) {
+            this.selectedFighterDescription = this.add.text(550, 250, fighter.getDescription());
+            this.selectedFighterDescription.setWordWrapWidth(200);
+        } else {
+            this.selectedFighterDescription.setText(fighter.getDescription());
+        }
+
+        if (!this.selectedFighterImage) {
+            this.selectedFighterImage = this.add.image(
+                650,
+                175,
+                fighter.getTextureNameForPlayer(this.activePlayer)
+            );
+        } else {
+            this.selectedFighterImage = this.selectedFighterImage.setTexture(
+                fighter.getTextureNameForPlayer(this.activePlayer)
+            );
         }
     }
 }

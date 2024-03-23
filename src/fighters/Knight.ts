@@ -5,10 +5,12 @@ import AFighter from "./AFighter";
 import IFighter from "./IFighter";
 
 export default class Knight extends AFighter  implements IFighter {
-    static readonly textureNamePlayer_1: string = 'knight-player-1';
-    static readonly texturePathPlayer_1: string = 'images/red/knight/Combat Ready Idle.png';
-    static readonly textureNamePlayer_2: string = 'knight-player-2';
-    static readonly texturePathPlayer_2: string = 'images/green/knight/Combat Ready Idle.png';
+    static readonly TEXTURE_NAME_PLAYER_1: string = 'knight-player-1';
+    static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/knight/Combat Ready Idle.png';
+    static readonly TEXTURE_NAME_PLAYER_2: string = 'knight-player-2';
+    static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/knight/Combat Ready Idle.png';
+    static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be a knight!"`;
+
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
 
@@ -45,7 +47,23 @@ export default class Knight extends AFighter  implements IFighter {
         super(player, scene, x, y);
     }
 
-    protected getActiveTexture(): string {
-        return this.player === Players.Player_1 ? Knight.textureNamePlayer_1 : Knight.textureNamePlayer_2;
+    getTextureNameForPlayer(playerNumber: number): string {
+        switch (playerNumber + 1) {
+            case 2:
+                return Knight.TEXTURE_NAME_PLAYER_2;
+            case 1:
+            default:
+                return Knight.TEXTURE_NAME_PLAYER_1;
+        }
     }
+
+    getDescription(): string {
+        return Knight.DESCRIPTION;
+    }
+
+    protected getActiveTexture(): string {
+        return this.player === Players.Player_1 ? Knight.TEXTURE_NAME_PLAYER_1 : Knight.TEXTURE_NAME_PLAYER_2;
+    }
+
+    protected 
 }

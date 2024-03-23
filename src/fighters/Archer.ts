@@ -5,10 +5,11 @@ import AFighter from "./AFighter";
 import IFighter from "./IFighter";
 
 export default class Archer extends AFighter  implements IFighter {
-    static readonly textureNamePlayer_1: string = 'archer-player-1';
-    static readonly texturePathPlayer_1: string = 'images/red/archer/Combat Ready Idle.png';
-    static readonly textureNamePlayer_2: string = 'archer-player-2';
-    static readonly texturePathPlayer_2: string = 'images/green/archer/Combat Ready Idle.png';
+    static readonly TEXTURE_NAME_PLAYER_1: string = 'archer-player-1';
+    static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/archer/Combat Ready Idle.png';
+    static readonly TEXTURE_NAME_PLAYER_2: string = 'archer-player-2';
+    static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/archer/Combat Ready Idle.png';
+    static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be a archer!"`;
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
 
@@ -54,7 +55,21 @@ export default class Archer extends AFighter  implements IFighter {
         super(player, scene, x, y);
     }
 
+    getTextureNameForPlayer(playerNumber: number): string {
+        switch (playerNumber + 1) {
+            case 2:
+                return Archer.TEXTURE_NAME_PLAYER_2;
+            case 1:
+            default:
+                return Archer.TEXTURE_NAME_PLAYER_1;
+        }
+    }
+
+    getDescription(): string {
+        return Archer.DESCRIPTION;
+    }
+
     protected getActiveTexture(): string {
-        return this.player === Players.Player_1 ? Archer.textureNamePlayer_1 : Archer.textureNamePlayer_2;
+        return this.player === Players.Player_1 ? Archer.TEXTURE_NAME_PLAYER_1 : Archer.TEXTURE_NAME_PLAYER_2;
     }
 }
