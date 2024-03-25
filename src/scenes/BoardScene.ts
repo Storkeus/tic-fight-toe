@@ -6,6 +6,7 @@ import { Players } from '~/Players';
 import Tile from '~/Tile';
 import AScene from './AScene';
 import GameOverScene from './GameOverScene';
+import debounce from 'debounce';
 
 export default class BoardScene extends AScene {
 
@@ -24,6 +25,7 @@ export default class BoardScene extends AScene {
     selectedFighter!: IFighter;
     selectedFighterDescription?: Phaser.GameObjects.Text;
     selectedFighterImage?: Phaser.GameObjects.Image;
+    selectedFighterImageOnPointer?: Phaser.GameObjects.Image;
 
     tiles: Array<Array<Tile>> = [];
 
@@ -198,16 +200,53 @@ export default class BoardScene extends AScene {
             this.selectedFighterDescription.setText(fighter.getDescription());
         }
 
+
+        this.refreshSelectedFighterImage(fighter);
+        this.refreshSelectedFighterImageOnPointer(fighter);
+
+        
+    }
+    
+    refreshSelectedFighterImage(fighter: IFighter) {
         if (!this.selectedFighterImage) {
             this.selectedFighterImage = this.add.image(
                 650,
                 175,
                 fighter.getTextureNameForPlayer(this.activePlayer)
-            );
+            ).setInteractive();
         } else {
             this.selectedFighterImage = this.selectedFighterImage.setTexture(
                 fighter.getTextureNameForPlayer(this.activePlayer)
             );
         }
+    }
+
+    refreshSelectedFighterImageOnPointer(fighter: IFighter) {
+        if (!this.selectedFighterImageOnPointer) {
+            this.selectedFighterImageOnPointer = this.add.image(
+                -200,
+                -200,
+                fighter.getTextureNameForPlayer(this.activePlayer)
+            ).setInteractive();
+
+            this.selectedFighterImageOnPointer!.setDepth(50);
+            this.input.on(Phaser.Input.Events.POINTER_MOVE, debounce((pointer: Phaser.Input.Pointer) => {
+                if (this.isFighterAction) {
+                    this.selectedFighterImageOnPointer!.setPosition(650, 175);
+                } else {
+                    this.selectedFighterImageOnPointer!.setPosition(pointer.worldX-50, pointer.worldY-50);
+                }
+            }, 10));
+        } else {
+            this.selectedFighterImageOnPointer = this.selectedFighterImageOnPointer.setTexture(
+                fighter.getTextureNameForPlayer(this.activePlayer)
+            );
+        }
+
+        this.selectedFighterImageOnPointer.setVisible(true);
+    }
+
+    hideSelectedFighterImageOnPointer() {
+        this.selectedFighterImageOnPointer!.setVisible(false);
     }
 }

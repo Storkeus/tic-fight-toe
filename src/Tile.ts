@@ -1,5 +1,4 @@
 import IFighter from "./fighters/IFighter";
-import Knight from "./fighters/Knight";
 import WinConditionChecker from "./helpers/WinConditionChecker";
 import { Players } from "./Players";
 import BoardScene from "./scenes/BoardScene";
@@ -24,7 +23,7 @@ export default class Tile
     {
         this.scene = scene;
         this.gameObject = this.scene.add.image(positionX, positionY, Tile.textureName).setInteractive()
-        .on('pointerdown', () => {
+        .on(Phaser.Input.Events.POINTER_DOWN, () => {
             if (this.scene.isFighterAction) {
                 if (this.isActive && this.fighter) {
                     this.fighter.remove();
@@ -50,6 +49,7 @@ export default class Tile
                             this.scene.nextPlayer();
                         } else {
                             this.scene.isFighterAction = true;
+                            this.scene.hideSelectedFighterImageOnPointer();
                         }
                     }
                     else {

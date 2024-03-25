@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"deasync": "^0.1.28",
+		"debounce": "^2.0.0",
 		"node-addon-api": "^7.0.0",
 		"phaser": "^3.55.2"
 	},
