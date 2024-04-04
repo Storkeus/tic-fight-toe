@@ -6,6 +6,10 @@ export default interface IFighter {
     getPlayer(): Players;
     findTargets(grid: Array<Array<Tile>>, startX: number, startY: number): number;
     remove(): void;
+    removeInteractive(): void;
     getDescription(): string;
     getTextureNameForPlayer(playerNumber: integer): string;
+    enableFollowingPointer(): void;
+    disableFollowingPointer(): void;
+    isOnBoard: boolean;
 }

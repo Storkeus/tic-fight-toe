@@ -64,6 +64,4 @@ export default class Knight extends AFighter  implements IFighter {
     protected getActiveTexture(): string {
         return this.player === Players.Player_1 ? Knight.TEXTURE_NAME_PLAYER_1 : Knight.TEXTURE_NAME_PLAYER_2;
     }
-
-    protected 
 }

@@ -49,7 +49,6 @@ export default class Tile
                             this.scene.nextPlayer();
                         } else {
                             this.scene.isFighterAction = true;
-                            this.scene.hideSelectedFighterImageOnPointer();
                         }
                     }
                     else {
@@ -65,6 +64,9 @@ export default class Tile
 
     putFighter(fighter: IFighter)
     {
+        fighter.isOnBoard = true;
+        fighter.disableFollowingPointer();
+        fighter.removeInteractive();
         fighter.setPosition(this.gameObject.x, this.gameObject.y);
         this.fighter = fighter;
     }

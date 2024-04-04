@@ -6,7 +6,9 @@ import { Players } from '~/Players';
 import Tile from '~/Tile';
 import AScene from './AScene';
 import GameOverScene from './GameOverScene';
-import debounce from 'debounce';
+import KnightFactory from '~/fighters/KnightFactory';
+import Player from '~/Player';
+import ArcherFactory from '~/fighters/ArcherFactory';
 
 export default class BoardScene extends AScene {
 
@@ -33,6 +35,8 @@ export default class BoardScene extends AScene {
 
     currentTurnFighter: string = 'knight';
     orderOfFighters: Array<string> = ['knight', 'archer'];
+    players: Array<Player> = [new Player(Players.Player_1, []), new Player(Players.Player_2, [])];
+    fightersInMenu: Array<IFighter> = [];
 
 
     constructor() {
@@ -93,10 +97,15 @@ export default class BoardScene extends AScene {
         });
 
         this.add.image(400, 300, 'background');
+        this.setAvailableFightersOnPlayers();
         this.createBoard();
+        this.createFighterMenu();
         this.refreshActivePlayerText();
+    }
 
-        this.selectedFighter = this.getCurrentFighter();
+    setAvailableFightersOnPlayers() {
+        this.players[0].availableFighters = [new KnightFactory(this.players[0]), new ArcherFactory(this.players[0])];
+        this.players[1].availableFighters = [new ArcherFactory(this.players[1]), new KnightFactory(this.players[1])];
     }
 
     createBoard() {
@@ -111,6 +120,25 @@ export default class BoardScene extends AScene {
                     offsetY
                 );
 
+            }
+        }
+    }
+
+    createFighterMenu() {
+        this.destroyCurrentFightersMenu();
+
+        let x = this.boardStartX;
+        for (const fighterFactory of this.players[this.activePlayer].availableFighters) {
+            const fighter = fighterFactory.createFighter(this, x, 520);
+            this.fightersInMenu.push(fighter);
+            x += 100;
+        }
+    }
+
+    destroyCurrentFightersMenu() {
+        for (const fighter of this.fightersInMenu) {
+            if (!fighter.isOnBoard) {
+                fighter.remove();
             }
         }
     }
@@ -134,9 +162,8 @@ export default class BoardScene extends AScene {
             this.activePlayer = Players.Player_1;
         }
 
-        this.selectedFighter = this.getCurrentFighter();
-
         this.refreshActivePlayerText();
+        this.createFighterMenu();
         this.markAllTilesUnactive();
         this.isFighterAction = false;
 
@@ -187,8 +214,6 @@ export default class BoardScene extends AScene {
                 }
         }
 
-        this.setFighterDescription(fighter);
-
         return fighter;
     }
 
@@ -198,13 +223,16 @@ export default class BoardScene extends AScene {
             this.selectedFighterDescription.setWordWrapWidth(200);
         } else {
             this.selectedFighterDescription.setText(fighter.getDescription());
+            this.selectedFighterDescription.setVisible(true);
         }
 
 
         this.refreshSelectedFighterImage(fighter);
-        this.refreshSelectedFighterImageOnPointer(fighter);
+    }
 
-        
+    hideFighterDescription() {
+        this.selectedFighterDescription?.setVisible(false);
+        this.selectedFighterImage?.setVisible(false);
     }
     
     refreshSelectedFighterImage(fighter: IFighter) {
@@ -218,35 +246,7 @@ export default class BoardScene extends AScene {
             this.selectedFighterImage = this.selectedFighterImage.setTexture(
                 fighter.getTextureNameForPlayer(this.activePlayer)
             );
+            this.selectedFighterImage.setVisible(true);
         }
-    }
-
-    refreshSelectedFighterImageOnPointer(fighter: IFighter) {
-        if (!this.selectedFighterImageOnPointer) {
-            this.selectedFighterImageOnPointer = this.add.image(
-                -200,
-                -200,
-                fighter.getTextureNameForPlayer(this.activePlayer)
-            ).setInteractive();
-
-            this.selectedFighterImageOnPointer!.setDepth(50);
-            this.input.on(Phaser.Input.Events.POINTER_MOVE, debounce((pointer: Phaser.Input.Pointer) => {
-                if (this.isFighterAction) {
-                    this.selectedFighterImageOnPointer!.setPosition(650, 175);
-                } else {
-                    this.selectedFighterImageOnPointer!.setPosition(pointer.worldX-50, pointer.worldY-50);
-                }
-            }, 10));
-        } else {
-            this.selectedFighterImageOnPointer = this.selectedFighterImageOnPointer.setTexture(
-                fighter.getTextureNameForPlayer(this.activePlayer)
-            );
-        }
-
-        this.selectedFighterImageOnPointer.setVisible(true);
-    }
-
-    hideSelectedFighterImageOnPointer() {
-        this.selectedFighterImageOnPointer!.setVisible(false);
     }
 }
