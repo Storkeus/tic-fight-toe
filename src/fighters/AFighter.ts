@@ -9,6 +9,7 @@ export default abstract class AFighter implements IFighter {
     private gameObject: Phaser.GameObjects.Sprite;
     protected player: Players;
     public isOnBoard: boolean = false;
+    private shouldFollowPointer: boolean = false;
 
     constructor(player: Players , scene: BoardScene, x: number, y: number) {
         this.player = player;
@@ -63,15 +64,20 @@ export default abstract class AFighter implements IFighter {
     enableFollowingPointer(): void {
         this.gameObject.setDepth(50);
         this.removeInteractive();
+        this.shouldFollowPointer = true;
         this.scene.input.on(Phaser.Input.Events.POINTER_MOVE, this.followPointerFunction);
     }
 
     disableFollowingPointer(): void {
         this.gameObject.setDepth(0);
+        this.shouldFollowPointer = false;
         this.scene.input.off(Phaser.Input.Events.POINTER_MOVE, this.followPointerFunction);
     }
 
     private followPointerFunction: Function = debounce((pointer: Phaser.Input.Pointer) => {
-        this.gameObject.setPosition(pointer.worldX-50, pointer.worldY-50);
+        // check required because of debounce, without it position was sometimes set after disabling following pointer
+        if (this.shouldFollowPointer) { 
+            this.gameObject.setPosition(pointer.worldX-50, pointer.worldY-50);
+        }
     }, 10);
 }
