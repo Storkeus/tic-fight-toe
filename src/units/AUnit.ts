@@ -1,10 +1,10 @@
 import { Players } from "~/Players";
 import BoardScene from "~/scenes/BoardScene";
 import Tile from "~/Tile";
-import IFighter from "./IFighter";
+import IUnit from "./IUnit";
 import debounce from "debounce";
 
-export default abstract class AFighter implements IFighter {
+export default abstract class AUnit implements IUnit {
     private scene: BoardScene;
     private gameObject: Phaser.GameObjects.Sprite;
     protected player: Players;
@@ -19,15 +19,15 @@ export default abstract class AFighter implements IFighter {
         this.gameObject = this.scene.add.sprite(x, y, texture).setInteractive();
         this.gameObject.anims.play(`${texture}-idle`, true);
         this.gameObject.addListener(Phaser.Input.Events.POINTER_OVER, () => {
-            this.scene.setFighterDescription(this); // Refactor to event sending
+            this.scene.setUnitDescription(this); // Refactor to event sending
         });
 
         this.gameObject.addListener(Phaser.Input.Events.POINTER_OUT, () => {
-            this.scene.hideFighterDescription();
+            this.scene.hideUnitDescription();
         });
 
         this.gameObject.addListener(Phaser.Input.Events.POINTER_DOWN, () => {
-            this.scene.selectedFighter = this;
+            this.scene.selectedUnit = this;
             this.enableFollowingPointer();
         });
 

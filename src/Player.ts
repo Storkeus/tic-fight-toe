@@ -1,14 +1,14 @@
 import { Players } from "./Players";
-import IFighterFactory from "./fighters/IFighterFactory";
+import IUnitFactory from "./units/IUnitFactory";
 
 
 export default class Player
 {
     playerNumber: Players;
-    availableFighters: Array<IFighterFactory>;
+    availableUnits: Array<IUnitFactory>;
 
-    constructor (playerNumber: Players, availableFighters: Array<IFighterFactory>) {
+    constructor (playerNumber: Players, availableUnits: Array<IUnitFactory>) {
         this.playerNumber = playerNumber;
-        this.availableFighters =  availableFighters;
+        this.availableUnits =  availableUnits;
     }
 }

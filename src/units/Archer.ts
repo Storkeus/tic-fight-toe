@@ -1,10 +1,10 @@
 import { Players } from "~/Players";
 import BoardScene from "~/scenes/BoardScene";
 import Tile from "~/Tile";
-import AFighter from "./AFighter";
-import IFighter from "./IFighter";
+import AUnit from "./AUnit";
+import IUnit from "./IUnit";
 
-export default class Archer extends AFighter  implements IFighter {
+export default class Archer extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_1: string = 'archer-player-1';
     static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/archer/Combat Ready Idle.png';
     static readonly TEXTURE_NAME_PLAYER_2: string = 'archer-player-2';
@@ -17,7 +17,7 @@ export default class Archer extends AFighter  implements IFighter {
 
         for (const row of grid) {
             for (const tile of row) {
-                if (tile.hasEnemyFighter()) {
+                if (tile.hasEnemyUnit()) {
                     tile.markActive();
                     numberOfActiveTarget++;
                 }
@@ -25,25 +25,25 @@ export default class Archer extends AFighter  implements IFighter {
         }
 
         const upperTile: Tile | null = startY - 1 >= 0 ? grid[startX][startY - 1] : null;
-        if (!!upperTile && upperTile.hasEnemyFighter()) {
+        if (!!upperTile && upperTile.hasEnemyUnit()) {
             upperTile.markUnactive();
             numberOfActiveTarget--;
         }
 
         const rightTile: Tile | null = startX + 1 <= 2 ? grid[startX + 1][startY] : null;
-        if (!!rightTile && rightTile.hasEnemyFighter()) {
+        if (!!rightTile && rightTile.hasEnemyUnit()) {
             rightTile.markUnactive();
             numberOfActiveTarget--;
         }
 
         const leftTile: Tile | null = startX - 1 >= 0 ? grid[startX - 1][startY] : null;
-        if (!!leftTile && leftTile.hasEnemyFighter()) {
+        if (!!leftTile && leftTile.hasEnemyUnit()) {
             leftTile.markUnactive();
             numberOfActiveTarget--;
         }
 
         const bottomTile: Tile | null = startY + 1 <= 2 ? grid[startX][startY + 1] : null;
-        if (!!bottomTile && bottomTile.hasEnemyFighter()) {
+        if (!!bottomTile && bottomTile.hasEnemyUnit()) {
             bottomTile.markUnactive();
             numberOfActiveTarget--;
         }

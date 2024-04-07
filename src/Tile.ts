@@ -1,4 +1,4 @@
-import IFighter from "./fighters/IFighter";
+import IUnit from "./units/IUnit";
 import WinConditionChecker from "./helpers/WinConditionChecker";
 import { Players } from "./Players";
 import BoardScene from "./scenes/BoardScene";
@@ -12,7 +12,7 @@ export default class Tile
 
     private gameObject: Phaser.GameObjects.Image; 
     private scene: BoardScene;
-    private fighter?: IFighter;
+    private unit?: IUnit;
 
     public positionXInGrid: number;
     public positionYInGrid: number;
@@ -24,35 +24,35 @@ export default class Tile
         this.scene = scene;
         this.gameObject = this.scene.add.image(positionX, positionY, Tile.textureName).setInteractive()
         .on(Phaser.Input.Events.POINTER_DOWN, () => {
-            if (this.scene.isFighterAction) {
-                if (this.isActive && this.fighter) {
-                    this.fighter.remove();
-                    this.fighter = undefined;
+            if (this.scene.isUnitAction) {
+                if (this.isActive && this.unit) {
+                    this.unit.remove();
+                    this.unit = undefined;
                     this.scene.nextPlayer();
                 }
             } else {
                 let firstClickInTurn: boolean = false;
-                if (!this.fighter) {
-                    this.putFighter(this.scene.selectedFighter);
+                if (!this.unit) {
+                    this.putUnit(this.scene.selectedUnit);
                     firstClickInTurn = true;
                 }
 
                 if (firstClickInTurn) {
-                    if (this.fighter !== undefined) {
+                    if (this.unit !== undefined) {
                         const winConditionChecker = new WinConditionChecker();
                         if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
                             this.scene.endGame();
                         }
     
-                        const targets: number = this.fighter.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
+                        const targets: number = this.unit.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
                         if (targets === 0) {
                             this.scene.nextPlayer();
                         } else {
-                            this.scene.isFighterAction = true;
+                            this.scene.isUnitAction = true;
                         }
                     }
                     else {
-                        throw new Error('Fighter should be defined at this after at first click in turn!');
+                        throw new Error('Unit should be defined at this after at first click in turn!');
                     }
                 }
             }
@@ -62,18 +62,18 @@ export default class Tile
         this.positionYInGrid = positionYInGrid;
     }
 
-    putFighter(fighter: IFighter)
+    putUnit(unit: IUnit)
     {
-        fighter.isOnBoard = true;
-        fighter.disableFollowingPointer();
-        fighter.removeInteractive();
-        fighter.setPosition(this.gameObject.x, this.gameObject.y);
-        this.fighter = fighter;
+        unit.isOnBoard = true;
+        unit.disableFollowingPointer();
+        unit.removeInteractive();
+        unit.setPosition(this.gameObject.x, this.gameObject.y);
+        this.unit = unit;
     }
 
     belongsToPlayer(player: Players): boolean {
-        console.log(!!this.fighter && this.fighter.getPlayer() === player)
-        return !!this.fighter && this.fighter.getPlayer() === player;
+        console.log(!!this.unit && this.unit.getPlayer() === player)
+        return !!this.unit && this.unit.getPlayer() === player;
     }
 
     markActive(): void {
@@ -85,7 +85,7 @@ export default class Tile
         this.isActive = false;
     }
 
-    hasEnemyFighter(): boolean {
-        return !!this.fighter && this.fighter.getPlayer() != this.scene.activePlayer;
+    hasEnemyUnit(): boolean {
+        return !!this.unit && this.unit.getPlayer() != this.scene.activePlayer;
     }
 }

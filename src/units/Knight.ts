@@ -1,10 +1,10 @@
 import { Players } from "~/Players";
 import BoardScene from "~/scenes/BoardScene";
 import Tile from "~/Tile";
-import AFighter from "./AFighter";
-import IFighter from "./IFighter";
+import AUnit from "./AUnit";
+import IUnit from "./IUnit";
 
-export default class Knight extends AFighter  implements IFighter {
+export default class Knight extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_1: string = 'knight-player-1';
     static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/knight/Combat Ready Idle.png';
     static readonly TEXTURE_NAME_PLAYER_2: string = 'knight-player-2';
@@ -17,25 +17,25 @@ export default class Knight extends AFighter  implements IFighter {
         let numberOfActiveTarget: number = 0;
 
         const upperTile: Tile | null = startY - 1 >= 0 ? grid[startX][startY - 1] : null;
-        if (!!upperTile && upperTile.hasEnemyFighter()) {
+        if (!!upperTile && upperTile.hasEnemyUnit()) {
             upperTile.markActive();
             numberOfActiveTarget++;
         }
 
         const rightTile: Tile | null = startX + 1 <= 2 ? grid[startX + 1][startY] : null;
-        if (!!rightTile && rightTile.hasEnemyFighter()) {
+        if (!!rightTile && rightTile.hasEnemyUnit()) {
             rightTile.markActive();
             numberOfActiveTarget++;
         }
 
         const leftTile: Tile | null = startX - 1 >= 0 ? grid[startX - 1][startY] : null;
-        if (!!leftTile && leftTile.hasEnemyFighter()) {
+        if (!!leftTile && leftTile.hasEnemyUnit()) {
             leftTile.markActive();
             numberOfActiveTarget++;
         }
 
         const bottomTile: Tile | null = startY + 1 <= 2 ? grid[startX][startY + 1] : null;
-        if (!!bottomTile && bottomTile.hasEnemyFighter()) {
+        if (!!bottomTile && bottomTile.hasEnemyUnit()) {
             bottomTile.markActive();
             numberOfActiveTarget++;
         }
