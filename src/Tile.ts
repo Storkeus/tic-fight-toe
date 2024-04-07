@@ -64,6 +64,10 @@ export default class Tile
 
     putUnit(unit: IUnit)
     {
+        if (unit.getPlayer() !== this.scene.activePlayer) {
+            return;
+        }
+
         unit.isOnBoard = true;
         unit.disableFollowingPointer();
         unit.removeInteractive();
@@ -72,7 +76,6 @@ export default class Tile
     }
 
     belongsToPlayer(player: Players): boolean {
-        console.log(!!this.unit && this.unit.getPlayer() === player)
         return !!this.unit && this.unit.getPlayer() === player;
     }
 
