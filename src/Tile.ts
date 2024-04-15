@@ -9,6 +9,7 @@ export default class Tile
     static readonly texturePath: string = 'images/tile.png';
     static readonly textureNameActive: string = 'tile-active';
     static readonly texturePathActive: string = 'images/tile-active.png';
+    static readonly EVENT_UNIT_DROPPED_INTO =  'unit_dropped_into';
 
     private gameObject: Phaser.GameObjects.Image; 
     private scene: BoardScene;
@@ -22,7 +23,7 @@ export default class Tile
     constructor (positionX: number, positionY: number, scene: BoardScene, positionXInGrid: number, positionYInGrid: number)
     {
         this.scene = scene;
-        this.gameObject = this.scene.add.image(positionX, positionY, Tile.textureName).setInteractive()
+        this.gameObject = this.scene.add.image(positionX, positionY, Tile.textureName).setInteractive({dropZone: true})
         .on(Phaser.Input.Events.POINTER_DOWN, () => {
             if (this.scene.isUnitAction) {
                 if (this.isActive && this.unit) {
@@ -30,34 +31,25 @@ export default class Tile
                     this.unit = undefined;
                     this.scene.nextPlayer();
                 }
-            } else {
-                let firstClickInTurn: boolean = false;
-                if (!this.unit) {
-                    this.putUnit(this.scene.selectedUnit);
-                    firstClickInTurn = true;
+            } 
+        }).on(Tile.EVENT_UNIT_DROPPED_INTO, (unit: IUnit) => {
+            if (!this.scene.isUnitAction && !this.unit) {
+                this.putUnit(unit);
+
+                const winConditionChecker = new WinConditionChecker();
+                if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
+                    this.scene.endGame();
                 }
 
-                if (firstClickInTurn) {
-                    if (this.unit !== undefined) {
-                        const winConditionChecker = new WinConditionChecker();
-                        if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
-                            this.scene.endGame();
-                        }
-    
-                        const targets: number = this.unit.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
-                        if (targets === 0) {
-                            this.scene.nextPlayer();
-                        } else {
-                            this.scene.isUnitAction = true;
-                        }
-                    }
-                    else {
-                        throw new Error('Unit should be defined at this after at first click in turn!');
-                    }
+                const targets: number = unit.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
+                if (targets === 0) {
+                    this.scene.nextPlayer();
+                } else {
+                    this.scene.isUnitAction = true;
                 }
             }
-
         });
+
         this.positionXInGrid = positionXInGrid;
         this.positionYInGrid = positionYInGrid;
     }
@@ -69,7 +61,6 @@ export default class Tile
         }
 
         unit.isOnBoard = true;
-        unit.disableFollowingPointer();
         unit.removeInteractive();
         unit.setPosition(this.gameObject.x, this.gameObject.y);
         this.unit = unit;

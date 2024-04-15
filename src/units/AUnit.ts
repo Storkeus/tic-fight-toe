@@ -10,13 +10,17 @@ export default abstract class AUnit implements IUnit {
     protected player: Players;
     public isOnBoard: boolean = false;
     private shouldFollowPointer: boolean = false;
+    private initialXPosition: number;
+    private initialYPosition: number;
 
     constructor(player: Players , scene: BoardScene, x: number, y: number) {
         this.player = player;
         this.scene = scene;
+        this.initialXPosition = x;
+        this.initialYPosition = y;
         const texture = this.getActiveTexture();
         
-        this.gameObject = this.scene.add.sprite(x, y, texture).setInteractive();
+        this.gameObject = this.scene.add.sprite(x, y, texture).setInteractive({draggable: true});
         this.gameObject.anims.play(`${texture}-idle`, true);
         this.gameObject.addListener(Phaser.Input.Events.POINTER_OVER, () => {
             this.scene.setUnitDescription(this); // Refactor to event sending
@@ -26,11 +30,24 @@ export default abstract class AUnit implements IUnit {
             this.scene.hideUnitDescription();
         });
 
-        this.gameObject.addListener(Phaser.Input.Events.POINTER_DOWN, () => {
-            this.scene.selectedUnit = this;
-            this.enableFollowingPointer();
+        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+            this.setPosition(dragX, dragY);
         });
 
+        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+            this.setPosition(this.initialXPosition, this.initialYPosition);
+        });
+
+        this.gameObject.on(
+            Phaser.Input.Events.GAMEOBJECT_DROP, 
+            (
+                pointer: Phaser.Input.Pointer,
+                gameObject: Phaser.GameObjects.GameObject,
+                dragX: number,
+                dragY: number
+            ) => {
+            gameObject.emit(Tile.EVENT_UNIT_DROPPED_INTO, this);
+        });
     }
 
     getDescription(): string {
@@ -60,24 +77,4 @@ export default abstract class AUnit implements IUnit {
     remove(): void {
         this.gameObject.destroy();
     }
-
-    enableFollowingPointer(): void {
-        this.gameObject.setDepth(50);
-        this.removeInteractive();
-        this.shouldFollowPointer = true;
-        this.scene.input.on(Phaser.Input.Events.POINTER_MOVE, this.followPointerFunction);
-    }
-
-    disableFollowingPointer(): void {
-        this.gameObject.setDepth(0);
-        this.shouldFollowPointer = false;
-        this.scene.input.off(Phaser.Input.Events.POINTER_MOVE, this.followPointerFunction);
-    }
-
-    private followPointerFunction: Function = debounce((pointer: Phaser.Input.Pointer) => {
-        // check required because of debounce, without it position was sometimes set after disabling following pointer
-        if (this.shouldFollowPointer) { 
-            this.gameObject.setPosition(pointer.worldX-50, pointer.worldY-50);
-        }
-    }, 10);
 }

@@ -24,7 +24,6 @@ export default class BoardScene extends AScene {
     activePlayerText?: Phaser.GameObjects.Text;
     activePlayer: Players = Players.Player_1;
 
-    selectedUnit!: IUnit;
     selectedUnitDescription?: Phaser.GameObjects.Text;
     selectedUnitImage?: Phaser.GameObjects.Image;
     selectedUnitImageOnPointer?: Phaser.GameObjects.Image;

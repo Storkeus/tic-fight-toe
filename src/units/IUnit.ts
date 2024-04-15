@@ -9,7 +9,5 @@ export default interface IUnit {
     removeInteractive(): void;
     getDescription(): string;
     getTextureNameForPlayer(playerNumber: integer): string;
-    enableFollowingPointer(): void;
-    disableFollowingPointer(): void;
     isOnBoard: boolean;
 }
