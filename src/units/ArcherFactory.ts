@@ -1,7 +1,7 @@
 import Archer from "./Archer";
-import BoardScene from "~/scenes/BoardScene";
+import BoardScene from "../scenes/BoardScene";
 import IUnitFactory from "./IUnitFactory";
-import Player from "~/Player";
+import Player from "../Player";
 
 export default class ArcherFactory implements IUnitFactory {
 

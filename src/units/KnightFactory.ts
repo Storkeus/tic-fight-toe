@@ -1,6 +1,6 @@
 import Knight from "./Knight";
-import BoardScene from "~/scenes/BoardScene";
-import Player from "~/Player";
+import BoardScene from "../scenes/BoardScene";
+import Player from "../Player";
 import IUnitFactory from "./IUnitFactory";
 
 export default class KnightFactory implements IUnitFactory {

@@ -1,14 +1,14 @@
 import Phaser from 'phaser'
-import IUnit from '~/units/IUnit';
-import Knight from '~/units/Knight';
-import Archer from '~/units/Archer';
-import { Players } from '~/Players';
-import Tile from '~/Tile';
+import IUnit from '../units/IUnit';
+import Knight from '../units/Knight';
+import Archer from '../units/Archer';
+import { Players } from '../Players';
+import Tile from '../Tile';
 import AScene from './AScene';
 import GameOverScene from './GameOverScene';
-import KnightFactory from '~/units/KnightFactory';
-import Player from '~/Player';
-import ArcherFactory from '~/units/ArcherFactory';
+import KnightFactory from '../units/KnightFactory';
+import Player from '../Player';
+import ArcherFactory from '../units/ArcherFactory';
 
 export default class BoardScene extends AScene {
 

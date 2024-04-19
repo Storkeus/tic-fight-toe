@@ -1,4 +1,4 @@
-import BoardScene from "~/scenes/BoardScene";
+import BoardScene from "../scenes/BoardScene";
 import IUnit from "./IUnit";
 
 export default interface IUnitFactory {

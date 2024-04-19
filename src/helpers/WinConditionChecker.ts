@@ -1,5 +1,5 @@
-import { Players } from "~/Players";
-import Tile from "~/Tile";
+import { Players } from "../Players";
+import Tile from "../Tile";
 import Bottom from "./gridTraveling/Bottom";
 import BottomLeft from "./gridTraveling/BottomLeft";
 import BottomRight from "./gridTraveling/BottomRight";

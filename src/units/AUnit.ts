@@ -1,8 +1,7 @@
-import { Players } from "~/Players";
-import BoardScene from "~/scenes/BoardScene";
-import Tile from "~/Tile";
+import { Players } from "../Players";
+import BoardScene from "../scenes/BoardScene";
+import Tile from "../Tile";
 import IUnit from "./IUnit";
-import debounce from "debounce";
 
 export default abstract class AUnit implements IUnit {
     private scene: BoardScene;
