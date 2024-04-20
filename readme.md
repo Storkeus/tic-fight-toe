@@ -9,6 +9,9 @@ This game is planned to be a tactical turn-based strategy game. In each turn a p
 
 ![Basic look of the game](/screenshots/game.png)
 
+## Demo
+You can try the game in the browser here: (https://tic-fight-toe.storkeus.xyz/)
+
 ## Based on Phaser 3 + TypeScript + Vite.js Template
 (https://github.com/ourcade/phaser3-vite-template)
 
