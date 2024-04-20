@@ -10,12 +10,13 @@ This game is planned to be a tactical turn-based strategy game. In each turn a p
 ![Basic look of the game](/screenshots/game.png)
 
 ## Demo
-You can try the game in the browser here: (https://tic-fight-toe.storkeus.xyz/)
+You can try the game in the browser here: https://tic-fight-toe.storkeus.xyz/
 
 ## Based on Phaser 3 + TypeScript + Vite.js Template
-(https://github.com/ourcade/phaser3-vite-template)
+https://github.com/ourcade/phaser3-vite-template
 
-![License](https://img.shields.io/badge/license-MIT-green) (https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
+![License](https://img.shields.io/badge/license-MIT-green)
+https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE
 
 This is a TypeScript specific fork of [phaser3-vite-template](https://github.com/ourcade/phaser3-vite-template).
 
@@ -110,7 +111,7 @@ Change 8000 to whatever you want.
 
 ## Blog
 I plan to write summaries of my work on this project on my blog:
-(https://blog.storkeus.xyz)
+https://blog.storkeus.xyz
 
 ## License
 [MIT License](https://github.com/Storkeus/tic-fight-toe/blob/master/LICENSE)
