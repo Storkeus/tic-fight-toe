@@ -8,7 +8,6 @@ export default abstract class AUnit implements IUnit {
     private gameObject: Phaser.GameObjects.Sprite;
     protected player: Players;
     public isOnBoard: boolean = false;
-    private shouldFollowPointer: boolean = false;
     private initialXPosition: number;
     private initialYPosition: number;
 
@@ -29,21 +28,21 @@ export default abstract class AUnit implements IUnit {
             this.scene.hideUnitDescription();
         });
 
-        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
             this.setPosition(dragX, dragY);
         });
 
-        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (_pointer: Phaser.Input.Pointer, _dragX: number, _dragY: number) => {
             this.setPosition(this.initialXPosition, this.initialYPosition);
         });
 
         this.gameObject.on(
             Phaser.Input.Events.GAMEOBJECT_DROP, 
             (
-                pointer: Phaser.Input.Pointer,
+                _pointer: Phaser.Input.Pointer,
                 gameObject: Phaser.GameObjects.GameObject,
-                dragX: number,
-                dragY: number
+                _dragX: number,
+                _dragY: number
             ) => {
             gameObject.emit(Tile.EVENT_UNIT_DROPPED_INTO, this);
         });
@@ -53,7 +52,7 @@ export default abstract class AUnit implements IUnit {
         throw new Error("Method not implemented.");
     }
 
-    getTextureNameForPlayer(playerNumber: number): string {
+    getTextureNameForPlayer(_playerNumber: number): string {
         throw new Error("Method not implemented.");
     }
 

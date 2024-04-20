@@ -12,7 +12,7 @@ export default class GameOverScene extends AScene {
         super(GameOverScene.key);
     }
 
-    init(data){
+    init(data: { winner: string; }){
         this.winner = data.winner;
     }
 
@@ -25,11 +25,11 @@ export default class GameOverScene extends AScene {
 
         this.add.image(400, 300, 'background-menu');
  
-        const gameOverText = this.add.text(400, 300, `Player ${this.winner} wins`, {fontSize: 50});
+        const gameOverText = this.add.text(400, 300, `Player ${this.winner} wins`, {fontSize: '50px'});
         gameOverText.setX(gameOverText.x - (gameOverText.displayWidth / 2));
         gameOverText.setY(gameOverText.y - gameOverText.displayHeight);
 
-        const backToMenuButton = this.add.text(800, 600, 'Back to menu', {fontSize: 30});
+        const backToMenuButton = this.add.text(800, 600, 'Back to menu', {fontSize: '30px'});
         backToMenuButton.setX(backToMenuButton.x - backToMenuButton.displayWidth - 20);
         backToMenuButton.setY(backToMenuButton.y - backToMenuButton.displayHeight - 20);
 

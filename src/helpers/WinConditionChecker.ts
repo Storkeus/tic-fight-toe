@@ -18,7 +18,6 @@ export default class WinConditionChecker
         const startPositionX: number = tile.positionXInGrid;
         const startPositionY: number = tile.positionYInGrid;
 
-        // TODO: Replace with generator
         const directions: Array<IDirection> = [
             new Top(),
             new TopRight(),
@@ -30,8 +29,6 @@ export default class WinConditionChecker
             new TopLeft()
         ];
 
-        let isWin = false;
-        console.log('SPRAWDZANIE');
         for(const direction of directions) {
             let positionX = startPositionX;
             let positionY = startPositionY;
@@ -47,7 +44,6 @@ export default class WinConditionChecker
                     break;
                 }
             }
-            console.log(positionX, positionY)
 
             const oppositeDirection: IDirection = direction.oppositeDirection;
             let isWinInDirection = true;
@@ -56,7 +52,6 @@ export default class WinConditionChecker
                 const stepTile = tiles[x] ? tiles[x][y] : undefined;
                 
                 if(stepTile && stepTile.belongsToPlayer(player)) {
-                    console.log(direction, oppositeDirection);
                     positionX = x;
                     positionY = y; 
                 } else {
