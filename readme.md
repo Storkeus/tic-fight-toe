@@ -1,7 +1,18 @@
-# Phaser 3 + TypeScript + Vite.js Template
-> Make Phaser 3 games with TypeScript and modern frontend tooling.
+# Tic Fight Toe
+Browser game that is like tic tac toe but with knights, archers, mages and monsters instead of O’s and X’s.
 
-![License](https://img.shields.io/badge/license-MIT-green)
+**Work in progress** - this is an early version of planned game.
+
+This game is planned to be a tactical turn-based strategy game. In each turn a player can place one of his fighters on the board. Every fighter has a special ability that is activated when a unit is placed. For example a knight can kill enemy unit near him and an archer can kill enemies away from him. To win the game player must put 3 of his fighters in a row.
+
+*Keep in mind that graphics used currently in the game are mostly temporary. Many of them may not be present in the final game.*
+
+![Basic look of the game](/screenshots/game.png)
+
+## Based on Phaser 3 + TypeScript + Vite.js Template
+(https://github.com/ourcade/phaser3-vite-template)
+
+![License](https://img.shields.io/badge/license-MIT-green) (https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
 
 This is a TypeScript specific fork of [phaser3-vite-template](https://github.com/ourcade/phaser3-vite-template).
 
@@ -24,15 +35,6 @@ nvm use node
 Replace 'node' with 'latest' for `nvm-windows`.
 
 ## Getting Started
-
-You can clone this repository or use [degit](https://github.com/Rich-Harris/degit) to scaffold the project like this:
-
-```bash
-npx degit https://github.com/ourcade/phaser3-typescript-vite-template my-folder-name
-cd my-folder-name
-
-npm install
-```
 
 Start development server:
 
@@ -63,12 +65,6 @@ Production files will be placed in the `dist` folder. Then upload those files to
 ```
 
 TypeScript files are intended for the `src` folder. `main.ts` is the entry point referenced by `index.html`.
-
-Other than that there is no opinion on how you should structure your project.
-
-There is an example `HelloWorldScene.ts` file that can be placed inside a `scenes` folder to organize by type or elsewhere to organize by function. For example, you can keep all files specific to the HelloWorld scene in a `hello-world` folder.
-
-It is all up to you!
 
 ## Static Assets
 
@@ -109,6 +105,9 @@ You can change the dev server's port number by modifying the `vite.config.ts` fi
 
 Change 8000 to whatever you want.
 
-## License
+## Blog
+I plan to write summaries of my work on this project on my blog:
+(https://blog.storkeus.xyz)
 
-[MIT License](https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
+## License
+[MIT License](https://github.com/Storkeus/tic-fight-toe/blob/master/LICENSE)

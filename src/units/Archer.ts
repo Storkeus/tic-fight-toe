@@ -9,7 +9,7 @@ export default class Archer extends AUnit  implements IUnit {
     static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/archer/Combat Ready Idle.png';
     static readonly TEXTURE_NAME_PLAYER_2: string = 'archer-player-2';
     static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/archer/Combat Ready Idle.png';
-    static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be a archer!"`;
+    static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be an archer!"`;
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
 
