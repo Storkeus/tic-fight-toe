@@ -9,6 +9,8 @@ import GameOverScene from './GameOverScene';
 import KnightFactory from '../units/KnightFactory';
 import Player from '../Player';
 import ArcherFactory from '../units/ArcherFactory';
+import Peasant from '../units/Peasant';
+import PeasantFactory from '../units/PeasantFactory';
 
 export default class BoardScene extends AScene {
 
@@ -33,7 +35,7 @@ export default class BoardScene extends AScene {
     isUnitAction: boolean = false;
 
     currentTurnUnit: string = 'knight';
-    orderOfUnits: Array<string> = ['knight', 'archer'];
+    orderOfUnits: Array<string> = ['peasant', 'knight', 'archer'];
     players: Array<Player> = [new Player(Players.Player_1, []), new Player(Players.Player_2, [])];
     unitsInMenu: Array<IUnit> = [];
 
@@ -46,6 +48,17 @@ export default class BoardScene extends AScene {
         this.load.image('background', 'images/background.png');
         this.load.image(Tile.textureName, Tile.texturePath);
         this.load.image(Tile.textureNameActive, Tile.texturePathActive);
+
+        this.load.spritesheet(Peasant.TEXTURE_NAME_PLAYER_1, Peasant.TEXTURE_PATH_PLAYER_1, {
+            frameWidth: 99,
+            frameHeight: 108
+        });
+
+        this.load.spritesheet(Peasant.TEXTURE_NAME_PLAYER_2, Peasant.TEXTURE_PATH_PLAYER_2, {
+            frameWidth: 99,
+            frameHeight: 108
+        });
+
 
         this.load.spritesheet(Knight.TEXTURE_NAME_PLAYER_1, Knight.TEXTURE_PATH_PLAYER_1, {
             frameWidth: 99,
@@ -69,6 +82,19 @@ export default class BoardScene extends AScene {
     }
 
     create() {
+        this.anims.create({
+            key: `${Peasant.TEXTURE_NAME_PLAYER_1}-idle`,
+            frames: this.anims.generateFrameNumbers(Peasant.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
+        this.anims.create({
+            key: `${Peasant.TEXTURE_NAME_PLAYER_2}-idle`,
+            frames: this.anims.generateFrameNumbers(Peasant.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
+
         this.anims.create({
             key: `${Knight.TEXTURE_NAME_PLAYER_1}-idle`,
             frames: this.anims.generateFrameNumbers(Knight.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
@@ -103,8 +129,8 @@ export default class BoardScene extends AScene {
     }
 
     setAvailableUnitsOnPlayers() {
-        this.players[0].availableUnits = [new KnightFactory(this.players[0]), new ArcherFactory(this.players[0])];
-        this.players[1].availableUnits = [new ArcherFactory(this.players[1]), new KnightFactory(this.players[1])];
+        this.players[0].availableUnits = [new PeasantFactory(this.players[0]), new KnightFactory(this.players[0]), new ArcherFactory(this.players[0])];
+        this.players[1].availableUnits = [new PeasantFactory(this.players[1]), new ArcherFactory(this.players[1]), new KnightFactory(this.players[1])];
     }
 
     createBoard() {
@@ -153,10 +179,8 @@ export default class BoardScene extends AScene {
     }
 
     nextPlayer() {
-        let shouldUnitChange = false;
         if (this.activePlayer === Players.Player_1) {
             this.activePlayer = Players.Player_2;
-            shouldUnitChange = true;
         } else {
             this.activePlayer = Players.Player_1;
         }
@@ -165,19 +189,6 @@ export default class BoardScene extends AScene {
         this.createUnitMenu();
         this.markAllTilesUnactive();
         this.isUnitAction = false;
-
-        if (shouldUnitChange) {
-            const currentTurnUnitIndex = this.orderOfUnits.findIndex((unit) => unit === this.currentTurnUnit);
-            if (currentTurnUnitIndex >= 0) {
-                if (currentTurnUnitIndex === this.orderOfUnits.length -1) {
-                    this.currentTurnUnit = this.orderOfUnits[0];
-                } else {
-                    this.currentTurnUnit = this.orderOfUnits[currentTurnUnitIndex + 1];
-                }
-            } else {
-                this.currentTurnUnit = 'knight';
-            }
-        }
     }
 
     markAllTilesUnactive() {
@@ -191,29 +202,6 @@ export default class BoardScene extends AScene {
 
     endGame() {
         this.scene.start(GameOverScene.key, {winner: this.activePlayer === Players.Player_1 ? '1' : '2'});
-    }
-
-    getCurrentUnit(): IUnit {
-        let unit: IUnit;
-        switch (this.currentTurnUnit) {
-            case 'knight':
-                {
-                    unit = new Knight(this.activePlayer, this, -100, -100);
-                    break;
-                }
-            case 'archer':
-                {
-                    unit = new Archer(this.activePlayer, this, -100, -100);
-                    break;
-                }
-            default:
-                {
-                    unit = new Knight(this.activePlayer, this, -100, -100);
-                    break;
-                }
-        }
-
-        return unit;
     }
 
     setUnitDescription(unit: IUnit) {
