@@ -34,8 +34,6 @@ export default class BoardScene extends AScene {
 
     isUnitAction: boolean = false;
 
-    currentTurnUnit: string = 'knight';
-    orderOfUnits: Array<string> = ['peasant', 'knight', 'archer'];
     players: Array<Player> = [new Player(Players.Player_1, []), new Player(Players.Player_2, [])];
     unitsInMenu: Array<IUnit> = [];
 
