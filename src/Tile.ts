@@ -31,7 +31,12 @@ export default class Tile
                     this.unit = undefined;
                     this.scene.nextPlayer();
                 }
-            } 
+            }  else if (this.unit && this.unit.getPlayer() === this.scene.activePlayer) {
+                const targets: number = this.unit.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
+                if (targets > 0) {
+                    this.scene.isUnitAction = true;
+                }
+            }
         }).on(Tile.EVENT_UNIT_DROPPED_INTO, (unit: IUnit) => {
             if (!this.scene.isUnitAction && !this.unit) {
                 this.putUnit(unit);
@@ -39,13 +44,8 @@ export default class Tile
                 const winConditionChecker = new WinConditionChecker();
                 if(winConditionChecker.checkWinConditionAfterTileChange(this.scene.tiles, this, this.scene.activePlayer)) {
                     this.scene.endGame();
-                }
-
-                const targets: number = unit.findTargets(this.scene.tiles, this.positionXInGrid, this.positionYInGrid);
-                if (targets === 0) {
-                    this.scene.nextPlayer();
                 } else {
-                    this.scene.isUnitAction = true;
+                    this.scene.nextPlayer();
                 }
             }
         });
