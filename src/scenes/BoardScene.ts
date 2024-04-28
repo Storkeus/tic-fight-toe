@@ -15,6 +15,7 @@ import PeasantFactory from '../units/PeasantFactory';
 export default class BoardScene extends AScene {
 
     static readonly key: string = 'Board';
+    static readonly UNIT_PLACED_SOUND_NAME = 'unit-placed';
 
     readonly numberOfColumns: number = 3;
     readonly numberOfRows: number = 3;
@@ -46,6 +47,8 @@ export default class BoardScene extends AScene {
         this.load.image('background', 'images/background.png');
         this.load.image(Tile.textureName, Tile.texturePath);
         this.load.image(Tile.textureNameActive, Tile.texturePathActive);
+
+        this.load.audio(BoardScene.UNIT_PLACED_SOUND_NAME, ['sounds/jumpland44100_by_MentalSanityOff.mp3']);
 
         this.load.spritesheet(Peasant.TEXTURE_NAME_PLAYER_1, Peasant.TEXTURE_PATH_PLAYER_1, {
             frameWidth: 99,

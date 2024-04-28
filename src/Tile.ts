@@ -64,6 +64,7 @@ export default class Tile
         unit.removeInteractive();
         unit.setPosition(this.gameObject.x, this.gameObject.y);
         this.unit = unit;
+        this.scene.sound.play(BoardScene.UNIT_PLACED_SOUND_NAME);
     }
 
     belongsToPlayer(player: Players): boolean {
