@@ -1,4 +1,4 @@
-import IUnit from "./units/IUnit";
+import IUnit from "./units/unit/IUnit";
 import WinConditionChecker from "./helpers/WinConditionChecker";
 import { Players } from "./Players";
 import BoardScene from "./scenes/BoardScene";
@@ -60,11 +60,8 @@ export default class Tile
             return;
         }
 
-        unit.isOnBoard = true;
-        unit.removeInteractive();
-        unit.setPosition(this.gameObject.x, this.gameObject.y);
+        unit.putOnBoard(this.gameObject.x, this.gameObject.y);
         this.unit = unit;
-        this.scene.sound.play(BoardScene.UNIT_PLACED_SOUND_NAME);
     }
 
     belongsToPlayer(player: Players): boolean {

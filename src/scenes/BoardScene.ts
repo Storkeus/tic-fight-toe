@@ -1,16 +1,16 @@
 import Phaser from 'phaser'
-import IUnit from '../units/IUnit';
-import Knight from '../units/Knight';
-import Archer from '../units/Archer';
+import IUnit from '../units/unit/IUnit';
+import Knight from '../units/unit/Knight';
+import Archer from '../units/unit/Archer';
 import { Players } from '../Players';
 import Tile from '../Tile';
 import AScene from './AScene';
 import GameOverScene from './GameOverScene';
-import KnightFactory from '../units/KnightFactory';
+import KnightFactory from '../units/unitFactory/KnightFactory';
 import Player from '../Player';
-import ArcherFactory from '../units/ArcherFactory';
-import Peasant from '../units/Peasant';
-import PeasantFactory from '../units/PeasantFactory';
+import ArcherFactory from '../units/unitFactory/ArcherFactory';
+import Peasant from '../units/unit/Peasant';
+import PeasantFactory from '../units/unitFactory/PeasantFactory';
 
 export default class BoardScene extends AScene {
 
@@ -130,8 +130,16 @@ export default class BoardScene extends AScene {
     }
 
     setAvailableUnitsOnPlayers() {
-        this.players[0].availableUnits = [new PeasantFactory(this.players[0]), new KnightFactory(this.players[0]), new ArcherFactory(this.players[0])];
-        this.players[1].availableUnits = [new PeasantFactory(this.players[1]), new ArcherFactory(this.players[1]), new KnightFactory(this.players[1])];
+        this.players[0].availableUnits = [
+            new PeasantFactory(this.players[0]),
+            new KnightFactory(this.players[0], 3),
+            new ArcherFactory(this.players[0], 2)
+        ];
+        this.players[1].availableUnits = [
+            new PeasantFactory(this.players[1]),
+            new KnightFactory(this.players[1], 2),
+            new ArcherFactory(this.players[1], 3)
+        ];
     }
 
     createBoard() {
@@ -156,8 +164,10 @@ export default class BoardScene extends AScene {
         let x = this.boardStartX;
         for (const unitFactory of this.players[this.activePlayer].availableUnits) {
             const unit = unitFactory.createUnit(this, x, 520);
-            this.unitsInMenu.push(unit);
-            x += 100;
+            if (unit) {
+                this.unitsInMenu.push(unit);
+                x += 100;
+            }
         }
     }
 
@@ -167,6 +177,7 @@ export default class BoardScene extends AScene {
                 unit.remove();
             }
         }
+        this.unitsInMenu = [];
     }
 
     refreshActivePlayerText() {

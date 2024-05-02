@@ -1,5 +1,5 @@
 import { Players } from "./Players";
-import IUnitFactory from "./units/IUnitFactory";
+import IUnitFactory from "./units/unitFactory/IUnitFactory";
 
 
 export default class Player

@@ -1,6 +1,6 @@
-import { Players } from "../Players";
-import BoardScene from "../scenes/BoardScene";
-import Tile from "../Tile";
+import { Players } from "../../Players";
+import BoardScene from "../../scenes/BoardScene";
+import Tile from "../../Tile";
 import AUnit from "./AUnit";
 import IUnit from "./IUnit";
 

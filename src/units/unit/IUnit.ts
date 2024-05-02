@@ -1,5 +1,5 @@
-import { Players } from "../Players";
-import Tile from "../Tile";
+import { Players } from "../../Players";
+import Tile from "../../Tile";
 
 export default interface IUnit {
     setPosition(x: number, y: number): void;
@@ -9,5 +9,6 @@ export default interface IUnit {
     removeInteractive(): void;
     getDescription(): string;
     getTextureNameForPlayer(playerNumber: integer): string;
+    putOnBoard(x: number, y: number): void;
     isOnBoard: boolean;
 }
