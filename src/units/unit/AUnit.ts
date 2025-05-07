@@ -14,6 +14,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     private initialXPosition: number;
     private initialYPosition: number;
     private observers: Array<IUnitObserver> = [];
+    public numberOfSpecialAbilityUses: number = 0;
 
     constructor(player: Players , scene: BoardScene, x: number, y: number) {
         this.player = player;

@@ -10,33 +10,37 @@ export default class Knight extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_2: string = 'knight-player-2';
     static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/knight/Combat Ready Idle.png';
     static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be a knight!"`;
-
+    numberOfSpecialAbilityUses: number = 1;
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
+
+        if (this.numberOfSpecialAbilityUses <= 0) {
+            return 0;
+        }
 
         let numberOfActiveTarget: number = 0;
 
         const upperTile: Tile | null = startY - 1 >= 0 ? grid[startX][startY - 1] : null;
         if (!!upperTile && upperTile.hasEnemyUnit()) {
-            upperTile.markActive();
+            upperTile.markActive(this);
             numberOfActiveTarget++;
         }
 
         const rightTile: Tile | null = startX + 1 <= 2 ? grid[startX + 1][startY] : null;
         if (!!rightTile && rightTile.hasEnemyUnit()) {
-            rightTile.markActive();
+            rightTile.markActive(this);
             numberOfActiveTarget++;
         }
 
         const leftTile: Tile | null = startX - 1 >= 0 ? grid[startX - 1][startY] : null;
         if (!!leftTile && leftTile.hasEnemyUnit()) {
-            leftTile.markActive();
+            leftTile.markActive(this);
             numberOfActiveTarget++;
         }
 
         const bottomTile: Tile | null = startY + 1 <= 2 ? grid[startX][startY + 1] : null;
         if (!!bottomTile && bottomTile.hasEnemyUnit()) {
-            bottomTile.markActive();
+            bottomTile.markActive(this);
             numberOfActiveTarget++;
         }
 

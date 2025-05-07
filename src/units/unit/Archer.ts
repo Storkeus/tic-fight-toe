@@ -4,21 +4,26 @@ import Tile from "../../Tile";
 import AUnit from "./AUnit";
 import IUnit from "./IUnit";
 
-export default class Archer extends AUnit  implements IUnit {
+export default class Archer extends AUnit implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_1: string = 'archer-player-1';
     static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/archer/Combat Ready Idle.png';
     static readonly TEXTURE_NAME_PLAYER_2: string = 'archer-player-2';
     static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/archer/Combat Ready Idle.png';
     static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be an archer!"`;
+    numberOfSpecialAbilityUses: number = 1;
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
+
+        if (this.numberOfSpecialAbilityUses <= 0) {
+            return 0;
+        }
 
         let numberOfActiveTarget: number = 0;
 
         for (const row of grid) {
             for (const tile of row) {
                 if (tile.hasEnemyUnit()) {
-                    tile.markActive();
+                    tile.markActive(this);
                     numberOfActiveTarget++;
                 }
             }

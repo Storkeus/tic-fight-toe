@@ -14,6 +14,7 @@ export default class Tile
     private gameObject: Phaser.GameObjects.Image; 
     private scene: BoardScene;
     private unit?: IUnit;
+    private activationReasonUnit?: IUnit;
 
     public positionXInGrid: number;
     public positionYInGrid: number;
@@ -29,6 +30,11 @@ export default class Tile
                 if (this.isActive && this.unit) {
                     this.unit.remove();
                     this.unit = undefined;
+
+                    if (this.activationReasonUnit) {
+                        this.activationReasonUnit.numberOfSpecialAbilityUses--;
+                    }
+
                     this.scene.nextPlayer();
                 }
             }  else if (this.unit && this.unit.getPlayer() === this.scene.activePlayer) {
@@ -68,11 +74,13 @@ export default class Tile
         return !!this.unit && this.unit.getPlayer() === player;
     }
 
-    markActive(): void {
+    markActive(activationReasonUnit?: IUnit): void {
+        this.activationReasonUnit = activationReasonUnit;
         this.gameObject.setTexture(Tile.textureNameActive);
         this.isActive = true;
     }
     markUnactive(): void {
+        this.activationReasonUnit = undefined;
         this.gameObject.setTexture(Tile.textureName);
         this.isActive = false;
     }
