@@ -10,7 +10,7 @@ export default class Peasant extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_2: string = 'peasant-player-2';
     static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/peasant/Combat Ready Idle.png';
     static readonly DESCRIPTION: string = `Defends his field even for a cost of life.\n\n"Someone stole my sweetroll"`;
-    numberOfSpecialAbilityUses: number = 0;
+    protected numberOfSpecialAbilityUses: number = 0;
 
     findTargets = (_grid: Array<Array<Tile>>, _startX: number, _startY: number): number => {
         return 0;
@@ -19,7 +19,6 @@ export default class Peasant extends AUnit  implements IUnit {
     constructor(player: Players, scene: BoardScene, x: number, y: number) {
         super(player, scene, x, y);
     }
-    numberOfSpecialAbilityUses: number;
 
     getTextureNameForPlayer(playerNumber: number): string {
         switch (playerNumber + 1) {

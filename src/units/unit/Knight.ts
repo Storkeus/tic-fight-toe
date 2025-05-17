@@ -10,11 +10,11 @@ export default class Knight extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_2: string = 'knight-player-2';
     static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/knight/Combat Ready Idle.png';
     static readonly DESCRIPTION: string = `Kills one enemy next to him.\n\n"What a night to be a knight!"`;
-    numberOfSpecialAbilityUses: number = 1;
+    protected numberOfSpecialAbilityUses: number = 1;
 
     findTargets = (grid: Array<Array<Tile>>, startX: number, startY: number): number => {
 
-        if (this.numberOfSpecialAbilityUses <= 0) {
+        if (!this.canUseAbility()) {
             return 0;
         }
 

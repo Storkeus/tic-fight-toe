@@ -80,6 +80,11 @@ export default class BoardScene extends AScene {
             frameWidth: 99,
             frameHeight: 108
         });
+
+        this.load.spritesheet('sparkle', 'images/sparkle.png', {
+            frameWidth: 99,
+            frameHeight: 108
+        });
     }
 
     create() {
@@ -118,6 +123,13 @@ export default class BoardScene extends AScene {
         this.anims.create({
             key: `${Archer.TEXTURE_NAME_PLAYER_2}-idle`,
             frames: this.anims.generateFrameNumbers(Archer.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: `sparkle-sparkle-sparkle`,
+            frames: this.anims.generateFrameNumbers('sparkle', { start: 0, end: 1 }),
             frameRate: 3,
             repeat: -1
         });

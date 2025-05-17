@@ -11,4 +11,6 @@ export default interface IUnit {
     getTextureNameForPlayer(playerNumber: integer): string;
     putOnBoard(x: number, y: number): void;
     isOnBoard: boolean;
+    canUseAbility(): boolean;
+    noteAbilityUsage(): void;
 }

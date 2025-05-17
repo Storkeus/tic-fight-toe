@@ -32,7 +32,7 @@ export default class Tile
                     this.unit = undefined;
 
                     if (this.activationReasonUnit) {
-                        this.activationReasonUnit.numberOfSpecialAbilityUses--;
+                        this.activationReasonUnit.noteAbilityUsage();
                     }
 
                     this.scene.nextPlayer();

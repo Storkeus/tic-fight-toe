@@ -8,13 +8,15 @@ import UnitEventDTO from "../unitObserver/UnitEventDTO";
 
 export default abstract class AUnit implements IUnit, IObservableUnit {
     private scene: BoardScene;
+    private container: Phaser.GameObjects.Container;
     private gameObject: Phaser.GameObjects.Sprite;
     protected player: Players;
     public isOnBoard: boolean = false;
     private initialXPosition: number;
     private initialYPosition: number;
     private observers: Array<IUnitObserver> = [];
-    public numberOfSpecialAbilityUses: number = 0;
+    protected numberOfSpecialAbilityUses: number = 0;
+    private sparkle: Phaser.GameObjects.Sprite | undefined;
 
     constructor(player: Players , scene: BoardScene, x: number, y: number) {
         this.player = player;
@@ -23,25 +25,31 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
         this.initialYPosition = y;
         const texture = this.getActiveTexture();
         
-        this.gameObject = this.scene.add.sprite(x, y, texture).setInteractive({draggable: true});
+        this.container = this.scene.add.container(x, y);
+        this.gameObject = this.scene.add.sprite(0, 0, texture);
+        this.container.add(this.gameObject);
+        
+        this.container.setInteractive(new Phaser.Geom.Rectangle(-this.gameObject.width/2, -this.gameObject.height/2, this.gameObject.width, this.gameObject.height), Phaser.Geom.Rectangle.Contains);
+        this.scene.input.setDraggable(this.container);
+        
         this.gameObject.anims.play(`${texture}-idle`, true);
-        this.gameObject.addListener(Phaser.Input.Events.POINTER_OVER, () => {
-            this.scene.setUnitDescription(this); // Refactor to event sending
+        this.container.addListener(Phaser.Input.Events.POINTER_OVER, () => {
+            this.scene.setUnitDescription(this);
         });
 
-        this.gameObject.addListener(Phaser.Input.Events.POINTER_OUT, () => {
+        this.container.addListener(Phaser.Input.Events.POINTER_OUT, () => {
             this.scene.hideUnitDescription();
         });
 
-        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+        this.container.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
             this.setPosition(dragX, dragY);
         });
 
-        this.gameObject.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (_pointer: Phaser.Input.Pointer, _dragX: number, _dragY: number) => {
+        this.container.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (_pointer: Phaser.Input.Pointer, _dragX: number, _dragY: number) => {
             this.setPosition(this.initialXPosition, this.initialYPosition);
         });
 
-        this.gameObject.on(
+        this.container.on(
             Phaser.Input.Events.GAMEOBJECT_DROP, 
             (
                 _pointer: Phaser.Input.Pointer,
@@ -53,11 +61,34 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
         });
     }
 
+    canUseAbility(): boolean {
+        return this.numberOfSpecialAbilityUses > 0;
+    }
+    noteAbilityUsage(): void {
+        this.numberOfSpecialAbilityUses--;
+
+        if (!this.canUseAbility()) {
+            this.sparkle?.destroy();
+            this.sparkle = undefined;
+        }
+    }
+
     putOnBoard(x: number, y: number): void {
         this.isOnBoard = true;
         this.removeInteractive();
         this.setPosition(x, y);
         this.notify();
+
+        if (this.canUseAbility()) {
+            this.sparkle = this.scene.add.sprite(
+                0,
+                0,
+                'sparkle'
+            );
+            this.sparkle.anims.play('sparkle-sparkle-sparkle');
+            this.container.add(this.sparkle);
+        }
+
         this.scene.sound.play(BoardScene.UNIT_PLACED_SOUND_NAME);
     }
 
@@ -78,7 +109,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     }
 
     notify(): void {
-        for (const observer of this.observers) {
+        for (const observer of this.observers) { 
             observer.update(new UnitEventDTO(UnitEventDTO.EVENT_NAME_UNIT_IS_PLACED_ON_BOARD));
         }
     }
@@ -90,11 +121,11 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     abstract findTargets(grid: Tile[][], startX: number, startY: number): number;
 
     setPosition(x: number, y: number): void {
-       this.gameObject.setPosition(x, y);
+       this.container.setPosition(x, y);
     }
 
     removeInteractive(): void {
-        this.gameObject.removeInteractive();
+        this.container.removeInteractive();
     }
 
     protected abstract getActiveTexture(): string;
@@ -104,6 +135,6 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     }
 
     remove(): void {
-        this.gameObject.destroy();
+        this.container.destroy();
     }
 }

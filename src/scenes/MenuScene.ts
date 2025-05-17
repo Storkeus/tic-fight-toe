@@ -26,7 +26,7 @@ export default class MenuScene extends AScene {
             this.scene.add(BoardScene.key, BoardScene, true);
         });
 
-        const copyrightText = this.add.text(400, 600, '© 2024 StorkyCode', {fontSize: '15px'});
+        const copyrightText = this.add.text(400, 600, '© 2025 StorkyCode', {fontSize: '15px'});
         copyrightText.setX(copyrightText.x - (copyrightText.displayWidth / 2));
         copyrightText.setY(copyrightText.y - copyrightText.displayHeight);
     }
