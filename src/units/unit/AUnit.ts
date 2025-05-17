@@ -10,6 +10,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     private scene: BoardScene;
     private container: Phaser.GameObjects.Container;
     private gameObject: Phaser.GameObjects.Sprite;
+    private countText?: Phaser.GameObjects.Text;
     protected player: Players;
     public isOnBoard: boolean = false;
     private initialXPosition: number;
@@ -18,7 +19,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     protected numberOfSpecialAbilityUses: number = 0;
     private sparkle: Phaser.GameObjects.Sprite | undefined;
 
-    constructor(player: Players , scene: BoardScene, x: number, y: number) {
+    constructor(player: Players, scene: BoardScene, x: number, y: number) {
         this.player = player;
         this.scene = scene;
         this.initialXPosition = x;
@@ -29,7 +30,18 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
         this.gameObject = this.scene.add.sprite(0, 0, texture);
         this.container.add(this.gameObject);
         
-        this.container.setInteractive(new Phaser.Geom.Rectangle(-this.gameObject.width/2, -this.gameObject.height/2, this.gameObject.width, this.gameObject.height), Phaser.Geom.Rectangle.Contains);
+        this.countText = this.scene.add.text(0, this.gameObject.height/2 + 3, '', {
+            fontSize: '20px',
+            color: '#ffffff',
+        });
+        this.countText.setOrigin(0.5, 0);
+        this.container.add(this.countText);
+        
+        this.container.setInteractive(
+            new Phaser.Geom.Rectangle(-this.gameObject.width/2, -this.gameObject.height/2, this.gameObject.width, this.gameObject.height),
+            Phaser.Geom.Rectangle.Contains
+        );
+    
         this.scene.input.setDraggable(this.container);
         
         this.gameObject.anims.play(`${texture}-idle`, true);
@@ -43,10 +55,16 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
 
         this.container.on(Phaser.Input.Events.GAMEOBJECT_DRAG, (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
             this.setPosition(dragX, dragY);
+            if (this.countText) {
+                this.countText.setVisible(false);
+            }
         });
 
         this.container.on(Phaser.Input.Events.GAMEOBJECT_DRAG_END, (_pointer: Phaser.Input.Pointer, _dragX: number, _dragY: number) => {
             this.setPosition(this.initialXPosition, this.initialYPosition);
+            if (this.countText && !this.isOnBoard) {
+                this.countText.setVisible(true);
+            }
         });
 
         this.container.on(
@@ -87,6 +105,11 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
             );
             this.sparkle.anims.play('sparkle-sparkle-sparkle');
             this.container.add(this.sparkle);
+        }
+
+        // Hide count text when unit is placed
+        if (this.countText) {
+            this.countText.setVisible(false);
         }
 
         this.scene.sound.play(BoardScene.UNIT_PLACED_SOUND_NAME);
@@ -134,7 +157,17 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
         return this.player;
     }
 
+    public getHeight(): number {
+        return this.gameObject.height;
+    }
+
     remove(): void {
         this.container.destroy();
+    }
+
+    public setCountText(count: number | string): void {
+        if (this.countText) {
+            this.countText.setText(count.toString());
+        }
     }
 }

@@ -11,6 +11,7 @@ import Player from '../Player';
 import ArcherFactory from '../units/unitFactory/ArcherFactory';
 import Peasant from '../units/unit/Peasant';
 import PeasantFactory from '../units/unitFactory/PeasantFactory';
+import AUnitFactory from '../units/unitFactory/AUnitFactory';
 
 export default class BoardScene extends AScene {
 
@@ -145,11 +146,11 @@ export default class BoardScene extends AScene {
         this.players[0].availableUnits = [
             new PeasantFactory(this.players[0]),
             new KnightFactory(this.players[0], 3),
-            new ArcherFactory(this.players[0], 2)
+            new ArcherFactory(this.players[0], 3)
         ];
         this.players[1].availableUnits = [
             new PeasantFactory(this.players[1]),
-            new KnightFactory(this.players[1], 2),
+            new KnightFactory(this.players[1], 4),
             new ArcherFactory(this.players[1], 3)
         ];
     }
@@ -178,6 +179,12 @@ export default class BoardScene extends AScene {
             const unit = unitFactory.createUnit(this, x, 520);
             if (unit) {
                 this.unitsInMenu.push(unit);
+
+                if (unitFactory.unitCountIsLimited) 
+                {
+                    unit.setCountText(unitFactory.unitCount);
+                }
+                
                 x += 100;
             }
         }
