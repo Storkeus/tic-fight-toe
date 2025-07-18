@@ -166,7 +166,8 @@ export default class BoardScene extends AScene {
                     offsetX,
                     offsetY
                 );
-
+                // Set initial tile color
+                this.tiles[offsetX][offsetY].setTintForPlayer(this.activePlayer);
             }
         }
     }
@@ -220,6 +221,13 @@ export default class BoardScene extends AScene {
         this.createUnitMenu();
         this.markAllTilesUnactive();
         this.isUnitAction = false;
+
+        // Color all tiles based on active player
+        for (let x = 0; x < this.tiles.length; x++) {
+            for (let y = 0; y < this.tiles[0].length; y++) {
+                this.tiles[x][y].setTintForPlayer(this.activePlayer);
+            }
+        }
     }
 
     markAllTilesUnactive() {

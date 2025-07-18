@@ -19,7 +19,7 @@ export default class Tile
     public positionXInGrid: number;
     public positionYInGrid: number;
 
-    private isActive: boolean = false;
+    public isActive: boolean = false;
 
     constructor (positionX: number, positionY: number, scene: BoardScene, positionXInGrid: number, positionYInGrid: number)
     {
@@ -87,5 +87,15 @@ export default class Tile
 
     hasEnemyUnit(): boolean {
         return !!this.unit && this.unit.getPlayer() != this.scene.activePlayer;
+    }
+
+    setTintForPlayer(player: Players): void {
+        if (!this.isActive) {
+            this.gameObject.setTint(player === Players.Player_1 ? 0xaa272c : 0x1e801d);
+        }
+    }
+
+    clearTint(): void {
+        this.gameObject.clearTint();
     }
 }
