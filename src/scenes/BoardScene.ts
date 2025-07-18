@@ -11,7 +11,6 @@ import Player from '../Player';
 import ArcherFactory from '../units/unitFactory/ArcherFactory';
 import Peasant from '../units/unit/Peasant';
 import PeasantFactory from '../units/unitFactory/PeasantFactory';
-import AUnitFactory from '../units/unitFactory/AUnitFactory';
 
 export default class BoardScene extends AScene {
 
