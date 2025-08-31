@@ -1,11 +1,11 @@
 import Knight from "../unit/Knight";
-import BoardScene from "../../scenes/BoardScene";
-import IUnitFactory from "./IUnitFactory";
+import type IUnitFactory from "./IUnitFactory";
 import AUnitFactory from "./AUnitFactory";
-import AUnit from "../unit/AUnit";
+import type AUnit from "../unit/AUnit";
+import IBoardScene from "../../scenes/IBoardScene";
 
 export default class KnightFactory extends AUnitFactory implements IUnitFactory {
-    protected createSpecificUnit(scene: BoardScene, x: number = -100, y: number = -100 ): AUnit {
-        return new Knight(this.player.playerNumber, scene, x, y);
+    protected createSpecificUnit(scene: IBoardScene, x: number = -100, y: number = -100 ): AUnit {
+        return new Knight(this.playerNumber, scene, x, y);
     }
 }

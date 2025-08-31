@@ -1,5 +1,5 @@
-import IUnitFactory from "../unitFactory/IUnitFactory";
-import IUnitObserver from "./IUnitObserver";
+import type IUnitFactory from "../unitFactory/IUnitFactory";
+import type IUnitObserver from "./IUnitObserver";
 import UnitEventDTO from "./UnitEventDTO";
 
 export default class UnitIsPlacedObserver implements IUnitObserver {

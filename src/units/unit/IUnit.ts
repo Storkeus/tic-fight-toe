@@ -1,5 +1,5 @@
-import { Players } from "../../Players";
-import Tile from "../../Tile";
+import type { Players } from "../../Players";
+import type Tile from "../../Tile";
 
 export default interface IUnit {
     setPosition(x: number, y: number): void;

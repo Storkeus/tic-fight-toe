@@ -1,14 +1,11 @@
+import { ARCHER_PLAYER_1, ARCHER_PLAYER_2 } from "../../helpers/Sprites";
 import { Players } from "../../Players";
-import BoardScene from "../../scenes/BoardScene";
+import type IBoardScene from "../../scenes/IBoardScene";
 import Tile from "../../Tile";
 import AUnit from "./AUnit";
-import IUnit from "./IUnit";
+import type IUnit from "./IUnit";
 
 export default class Archer extends AUnit implements IUnit {
-    static readonly TEXTURE_NAME_PLAYER_1: string = 'archer-player-1';
-    static readonly TEXTURE_PATH_PLAYER_1: string = 'images/red/archer/Combat Ready Idle.png';
-    static readonly TEXTURE_NAME_PLAYER_2: string = 'archer-player-2';
-    static readonly TEXTURE_PATH_PLAYER_2: string = 'images/green/archer/Combat Ready Idle.png';
     static readonly DESCRIPTION: string = `Kills one enemy away from him.\n\n"Crossbows are for losers."`;
     protected numberOfSpecialAbilityUses: number = 1;
 
@@ -56,17 +53,17 @@ export default class Archer extends AUnit implements IUnit {
         return numberOfActiveTarget;
     }
 
-    constructor(player: Players, scene: BoardScene, x: number, y: number) {
+    constructor(player: Players, scene: IBoardScene, x: number, y: number) {
         super(player, scene, x, y);
     }
 
     getTextureNameForPlayer(playerNumber: number): string {
         switch (playerNumber + 1) {
             case 2:
-                return Archer.TEXTURE_NAME_PLAYER_2;
+                return ARCHER_PLAYER_2.textureName;
             case 1:
             default:
-                return Archer.TEXTURE_NAME_PLAYER_1;
+                return ARCHER_PLAYER_1.textureName;
         }
     }
 
@@ -75,6 +72,6 @@ export default class Archer extends AUnit implements IUnit {
     }
 
     protected getActiveTexture(): string {
-        return this.player === Players.Player_1 ? Archer.TEXTURE_NAME_PLAYER_1 : Archer.TEXTURE_NAME_PLAYER_2;
+        return this.player === Players.Player_1 ? ARCHER_PLAYER_1.textureName : ARCHER_PLAYER_2.textureName;
     }
 }
