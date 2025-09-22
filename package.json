@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "vite",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"ds": "ds --exclude-types"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.40.0",
@@ -16,6 +17,7 @@
 		"vite": "^3.1.0"
 	},
 	"dependencies": {
+		"circular-dependency-scanner": "^2.3.0",
 		"phaser": "^3.55.2"
 	}
 }

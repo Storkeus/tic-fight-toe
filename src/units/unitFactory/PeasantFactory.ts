@@ -1,11 +1,11 @@
-import BoardScene from "../../scenes/BoardScene";
-import AUnit from "../unit/AUnit";
+import IBoardScene from "../../scenes/IBoardScene";
+import type AUnit from "../unit/AUnit";
 import Peasant from "../unit/Peasant";
 import AUnitFactory from "./AUnitFactory";
-import IUnitFactory from "./IUnitFactory";
+import type IUnitFactory from "./IUnitFactory";
 
 export default class PeasantFactory extends AUnitFactory implements IUnitFactory {
-    protected createSpecificUnit(scene: BoardScene, x: number = -100, y: number = -100 ): AUnit {
-        return new Peasant(this.player.playerNumber, scene, x, y);
+    protected createSpecificUnit(scene: IBoardScene, x: number = -100, y: number = -100 ): AUnit {
+        return new Peasant(this.playerNumber, scene, x, y);
     }
 }

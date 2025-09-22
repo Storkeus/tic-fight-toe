@@ -1,0 +1,1 @@
+export const UNIT_PLACED_SOUND_NAME = 'unit-placed';

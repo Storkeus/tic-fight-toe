@@ -1,15 +1,11 @@
-import AScene from './AScene';
-import BoardScene from './BoardScene';
-import MenuScene from './MenuScene';
+import { BOARD_SCENE_KEY, GAME_OVER_SCENE_KEY, MENU_SCENE_KEY } from '../helpers/SceneKeys';
 
-export default class GameOverScene extends AScene {
-    
-    static readonly key: string = 'GameOver';
-    
+export default class GameOverScene extends Phaser.Scene {
+        
     winner: string = 'unknown';
 
     constructor() {
-        super(GameOverScene.key);
+        super(GAME_OVER_SCENE_KEY);
     }
 
     init(data: { winner: string; }){
@@ -21,7 +17,7 @@ export default class GameOverScene extends AScene {
     }
 
     create() {
-        this.scene.remove(BoardScene.key);
+        this.scene.remove(BOARD_SCENE_KEY);
 
         this.add.image(400, 300, 'background-menu');
  
@@ -36,7 +32,7 @@ export default class GameOverScene extends AScene {
         backToMenuButton.setInteractive();
 
         backToMenuButton.on('pointerdown', () => {
-            this.scene.start(MenuScene.key);
+            this.scene.start(MENU_SCENE_KEY);
         });
     }
 }

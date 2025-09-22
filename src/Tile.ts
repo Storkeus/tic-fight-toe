@@ -1,7 +1,7 @@
-import IUnit from "./units/unit/IUnit";
+import type IUnit from "./units/unit/IUnit";
 import WinConditionChecker from "./helpers/WinConditionChecker";
 import { Players } from "./Players";
-import BoardScene from "./scenes/BoardScene";
+import type BoardScene from "./scenes/BoardScene";
 
 export default class Tile
 {

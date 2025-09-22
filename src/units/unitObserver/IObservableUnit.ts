@@ -1,4 +1,4 @@
-import IUnitObserver from "./IUnitObserver";
+import type IUnitObserver from "./IUnitObserver";
 
 export default interface IObservableUnit {
     attach(observer: IUnitObserver): void;

@@ -1,18 +1,18 @@
-import BoardScene from "../../scenes/BoardScene";
-import IUnitFactory from "./IUnitFactory";
-import Player from "../../Player";
+import type IUnitFactory from "./IUnitFactory";
 import UnitIsPlacedObserver from "../unitObserver/UnitIsPlacedObserver";
-import AUnit from "../unit/AUnit";
+import type AUnit from "../unit/AUnit";
+import type { Players } from "../../Players";
+import IBoardScene from "../../scenes/IBoardScene";
 
 export default abstract class AUnitFactory implements IUnitFactory {
 
-    player: Player;
+    playerNumber: Players;
     unitCount: number;
     unitCountIsLimited: boolean;
     unitIsPlacedObserver: UnitIsPlacedObserver;
     
-    constructor(player: Player, unitCount: number = 0) {
-        this.player = player;
+    constructor(playerNumber: Players, unitCount: number = 0) {
+        this.playerNumber = playerNumber;
         this.unitCount = unitCount;
         this.unitCountIsLimited = this.unitCount !== 0;
         this.unitIsPlacedObserver = new UnitIsPlacedObserver(this);
@@ -24,7 +24,7 @@ export default abstract class AUnitFactory implements IUnitFactory {
         }
     }
 
-    createUnit(scene: BoardScene, x: number = -100, y: number = -100 ): AUnit | null {
+    createUnit(scene: IBoardScene, x: number = -100, y: number = -100 ): AUnit | null {
          if (!this.unitCountIsLimited || this.unitCount > 0) {
             const unit = this.createSpecificUnit(scene, x, y);
             unit.attach(this.unitIsPlacedObserver);
@@ -34,5 +34,5 @@ export default abstract class AUnitFactory implements IUnitFactory {
          }
     }
 
-    protected abstract createSpecificUnit(_scene: BoardScene, _x: number, _y: number): AUnit
+    protected abstract createSpecificUnit(_scene: IBoardScene, _x: number, _y: number): AUnit
 }

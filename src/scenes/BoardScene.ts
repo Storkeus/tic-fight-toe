@@ -1,23 +1,14 @@
 import Phaser from 'phaser'
-import IUnit from '../units/unit/IUnit';
-import Knight from '../units/unit/Knight';
-import Archer from '../units/unit/Archer';
+import type IUnit from '../units/unit/IUnit';
 import { Players } from '../Players';
 import Tile from '../Tile';
-import AScene from './AScene';
-import GameOverScene from './GameOverScene';
-import KnightFactory from '../units/unitFactory/KnightFactory';
 import Player from '../Player';
-import ArcherFactory from '../units/unitFactory/ArcherFactory';
-import Peasant from '../units/unit/Peasant';
-import PeasantFactory from '../units/unitFactory/PeasantFactory';
-import AUnitFactory from '../units/unitFactory/AUnitFactory';
+import SpriteLoader from '../helpers/SpriteLoader';
+import { BOARD_SCENE_KEY, GAME_OVER_SCENE_KEY, UNIT_SELECTION_SCENE_KEY } from '../helpers/SceneKeys';
+import { UNIT_PLACED_SOUND_NAME } from '../helpers/Sounds';
+import IBoardScene from './IBoardScene';
 
-export default class BoardScene extends AScene {
-
-    static readonly key: string = 'Board';
-    static readonly UNIT_PLACED_SOUND_NAME = 'unit-placed';
-
+export default class BoardScene extends Phaser.Scene implements IBoardScene {
     readonly numberOfColumns: number = 3;
     readonly numberOfRows: number = 3;
     readonly boardStartX: number = 100;
@@ -36,51 +27,24 @@ export default class BoardScene extends AScene {
 
     isUnitAction: boolean = false;
 
-    players: Array<Player> = [new Player(Players.Player_1, []), new Player(Players.Player_2, [])];
+    players: Array<Player> = [];
     unitsInMenu: Array<IUnit> = [];
 
+    private spriteLoader: SpriteLoader;
 
     constructor() {
-        super(BoardScene.key);
+        super(BOARD_SCENE_KEY);
+        this.spriteLoader = new SpriteLoader();
     }
 
     preload() {
+        this.spriteLoader.loadAllUnitSpritesheets(this, true);
+
         this.load.image('background', 'images/background.png');
         this.load.image(Tile.textureName, Tile.texturePath);
         this.load.image(Tile.textureNameActive, Tile.texturePathActive);
 
-        this.load.audio(BoardScene.UNIT_PLACED_SOUND_NAME, ['sounds/jumpland44100_by_MentalSanityOff.mp3']);
-
-        this.load.spritesheet(Peasant.TEXTURE_NAME_PLAYER_1, Peasant.TEXTURE_PATH_PLAYER_1, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
-
-        this.load.spritesheet(Peasant.TEXTURE_NAME_PLAYER_2, Peasant.TEXTURE_PATH_PLAYER_2, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
-
-
-        this.load.spritesheet(Knight.TEXTURE_NAME_PLAYER_1, Knight.TEXTURE_PATH_PLAYER_1, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
-
-        this.load.spritesheet(Knight.TEXTURE_NAME_PLAYER_2, Knight.TEXTURE_PATH_PLAYER_2, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
-
-        this.load.spritesheet(Archer.TEXTURE_NAME_PLAYER_1, Archer.TEXTURE_PATH_PLAYER_1, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
-
-        this.load.spritesheet(Archer.TEXTURE_NAME_PLAYER_2, Archer.TEXTURE_PATH_PLAYER_2, {
-            frameWidth: 99,
-            frameHeight: 108
-        });
+        this.load.audio(UNIT_PLACED_SOUND_NAME, ['sounds/jumpland44100_by_MentalSanityOff.mp3']);
 
         this.load.spritesheet('sparkle', 'images/sparkle.png', {
             frameWidth: 99,
@@ -88,45 +52,14 @@ export default class BoardScene extends AScene {
         });
     }
 
+    init(data: {players: Array<Player>}) {
+        this.players = data.players;
+    }
+
     create() {
-        this.anims.create({
-            key: `${Peasant.TEXTURE_NAME_PLAYER_1}-idle`,
-            frames: this.anims.generateFrameNumbers(Peasant.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
-        this.anims.create({
-            key: `${Peasant.TEXTURE_NAME_PLAYER_2}-idle`,
-            frames: this.anims.generateFrameNumbers(Peasant.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
+        this.scene.remove(UNIT_SELECTION_SCENE_KEY);
 
-        this.anims.create({
-            key: `${Knight.TEXTURE_NAME_PLAYER_1}-idle`,
-            frames: this.anims.generateFrameNumbers(Knight.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
-        this.anims.create({
-            key: `${Knight.TEXTURE_NAME_PLAYER_2}-idle`,
-            frames: this.anims.generateFrameNumbers(Knight.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: `${Archer.TEXTURE_NAME_PLAYER_1}-idle`,
-            frames: this.anims.generateFrameNumbers(Archer.TEXTURE_NAME_PLAYER_1, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
-        this.anims.create({
-            key: `${Archer.TEXTURE_NAME_PLAYER_2}-idle`,
-            frames: this.anims.generateFrameNumbers(Archer.TEXTURE_NAME_PLAYER_2, { start: 0, end: 4 }),
-            frameRate: 3,
-            repeat: -1
-        });
+        this.spriteLoader.loadAllUnitAnimations(this, true);
 
         this.anims.create({
             key: `sparkle-sparkle-sparkle`,
@@ -136,23 +69,9 @@ export default class BoardScene extends AScene {
         });
 
         this.add.image(400, 300, 'background');
-        this.setAvailableUnitsOnPlayers();
         this.createBoard();
         this.createUnitMenu();
         this.refreshActivePlayerText();
-    }
-
-    setAvailableUnitsOnPlayers() {
-        this.players[0].availableUnits = [
-            new PeasantFactory(this.players[0]),
-            new KnightFactory(this.players[0], 3),
-            new ArcherFactory(this.players[0], 3)
-        ];
-        this.players[1].availableUnits = [
-            new PeasantFactory(this.players[1]),
-            new KnightFactory(this.players[1], 4),
-            new ArcherFactory(this.players[1], 3)
-        ];
     }
 
     createBoard() {
@@ -240,7 +159,7 @@ export default class BoardScene extends AScene {
     }
 
     endGame() {
-        this.scene.start(GameOverScene.key, {winner: this.activePlayer === Players.Player_1 ? '1' : '2'});
+        this.scene.start(GAME_OVER_SCENE_KEY, {winner: this.activePlayer === Players.Player_1 ? '1' : '2'});
     }
 
     setUnitDescription(unit: IUnit) {
@@ -250,7 +169,7 @@ export default class BoardScene extends AScene {
         } else {
             this.selectedUnitDescription.setText(unit.getDescription());
             this.selectedUnitDescription.setVisible(true);
-        }
+        } 
 
 
         this.refreshSelectedUnitImage(unit);

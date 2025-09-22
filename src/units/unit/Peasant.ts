@@ -1,8 +1,9 @@
+import { PEASANT_PLAYER_1, PEASANT_PLAYER_2 } from "../../helpers/Sprites";
 import { Players } from "../../Players";
-import BoardScene from "../../scenes/BoardScene";
-import Tile from "../../Tile";
+import type IBoardScene from "../../scenes/IBoardScene";
+import type Tile from "../../Tile";
 import AUnit from "./AUnit";
-import IUnit from "./IUnit";
+import type IUnit from "./IUnit";
 
 export default class Peasant extends AUnit  implements IUnit {
     static readonly TEXTURE_NAME_PLAYER_1: string = 'peasant-player-1';
@@ -16,17 +17,17 @@ export default class Peasant extends AUnit  implements IUnit {
         return 0;
     }
 
-    constructor(player: Players, scene: BoardScene, x: number, y: number) {
+    constructor(player: Players, scene: IBoardScene, x: number, y: number) {
         super(player, scene, x, y);
     }
 
     getTextureNameForPlayer(playerNumber: number): string {
         switch (playerNumber + 1) {
             case 2:
-                return Peasant.TEXTURE_NAME_PLAYER_2;
+                return PEASANT_PLAYER_2.textureName;
             case 1:
             default:
-                return Peasant.TEXTURE_NAME_PLAYER_1;
+                return PEASANT_PLAYER_1.textureName;
         }
     }
 
@@ -35,6 +36,6 @@ export default class Peasant extends AUnit  implements IUnit {
     }
 
     protected getActiveTexture(): string {
-        return this.player === Players.Player_1 ? Peasant.TEXTURE_NAME_PLAYER_1 : Peasant.TEXTURE_NAME_PLAYER_2;
+        return this.player === Players.Player_1 ? PEASANT_PLAYER_1.textureName : PEASANT_PLAYER_2.textureName;
     }
 }

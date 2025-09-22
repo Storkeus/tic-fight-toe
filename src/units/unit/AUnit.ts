@@ -1,13 +1,14 @@
-import { Players } from "../../Players";
-import BoardScene from "../../scenes/BoardScene";
+import type { Players } from "../../Players";
 import Tile from "../../Tile";
-import IObservableUnit from "../unitObserver/IObservableUnit";
-import IUnit from "./IUnit";
-import IUnitObserver from "../unitObserver/IUnitObserver";
+import type IObservableUnit from "../unitObserver/IObservableUnit";
+import type IUnit from "./IUnit";
+import type IUnitObserver from "../unitObserver/IUnitObserver";
 import UnitEventDTO from "../unitObserver/UnitEventDTO";
+import IBoardScene from "../../scenes/IBoardScene";
+import { UNIT_PLACED_SOUND_NAME } from "../../helpers/Sounds";
 
 export default abstract class AUnit implements IUnit, IObservableUnit {
-    private scene: BoardScene;
+    private scene: IBoardScene;
     private container: Phaser.GameObjects.Container;
     private gameObject: Phaser.GameObjects.Sprite;
     private countText?: Phaser.GameObjects.Text;
@@ -19,7 +20,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
     protected numberOfSpecialAbilityUses: number = 0;
     private sparkle: Phaser.GameObjects.Sprite | undefined;
 
-    constructor(player: Players, scene: BoardScene, x: number, y: number) {
+    constructor(player: Players, scene: IBoardScene, x: number, y: number) {
         this.player = player;
         this.scene = scene;
         this.initialXPosition = x;
@@ -112,7 +113,7 @@ export default abstract class AUnit implements IUnit, IObservableUnit {
             this.countText.setVisible(false);
         }
 
-        this.scene.sound.play(BoardScene.UNIT_PLACED_SOUND_NAME);
+        this.scene.sound.play(UNIT_PLACED_SOUND_NAME);
     }
 
     attach(observer: IUnitObserver): void {
